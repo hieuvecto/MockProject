@@ -35,4 +35,5 @@ phpunit.phar
 /.vagrant
 
 #nginx log
-/.log
+/log
+log/

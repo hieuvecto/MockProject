@@ -16,9 +16,18 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
+            'class'=>'yii\web\User',
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity-user-frontend'],
+        ],
+        'owner' => [
+            'class'=>'yii\web\User',
+            'identityClass' => 'common\models\Owner',
+            'enableAutoLogin' => true,
+            // 'enableSession' => true,
+            'loginUrl' => ['owner/login'],
+            'identityCookie' => ['name' => '_identity-owner-frontend'],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend

@@ -5,27 +5,28 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 /**
- * This is the model class for table "User".
+ * This is the model class for table "Owner".
  *
- * @property int $user_id
+ * @property int $owner_id
  * @property string $email
  * @property string $password
  * @property string $phone
  * @property string $avatar_url
- * @property int $user_status
  * @property int $created_at
  * @property int $updated_at
  *
- * @property Booking[] $bookings
+ * @property Pitch[] $pitches
  */
-class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
-{
+class Owner extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
+{   
+    public $old_password;
+    public $password_confirm;
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'User';
+        return 'Owner';
     }
 
     public function behaviors()
@@ -41,14 +42,15 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'password', 'phone', 'created_at', 'updated_at'], 'required'],
+            [['email', 'password', 'phone'], 'required'],
             [['avatar_url'], 'string'],
-            [['user_status', 'created_at', 'updated_at'], 'integer'],
+            [['created_at', 'updated_at'], 'integer'],
             [['email'], 'string', 'max' => 40],
-            [['password'], 'string', 'max' => 255],
+            [['password', 'old_password', 'password_confirm'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 13],
             [['email'], 'unique'],
             [['phone'], 'unique'],
+            [['email', 'phone'], 'trim'],
         ];
     }
 
@@ -58,12 +60,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function attributeLabels()
     {
         return [
-            'user_id' => 'User ID',
+            'owner_id' => 'Owner ID',
             'email' => 'Email',
             'password' => 'Password',
+            'old_password' => 'Old Password',
+            'password_confirm' => 'Password Confirm',
             'phone' => 'Phone',
             'avatar_url' => 'Avatar Url',
-            'user_status' => 'User Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -72,9 +75,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBookings()
+    public function getPitches()
     {
-        return $this->hasMany(Booking::className(), ['user_id' => 'user_id']);
+        return $this->hasMany(Pitch::className(), ['owner_id' => 'owner_id']);
     }
 
 
@@ -86,7 +89,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-       
+       return static::findOne($id);
     }
 
     /**
@@ -105,7 +108,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function getId()
     {
-        
+        return $this->owner_id;
     }
 
     /**
@@ -135,5 +138,23 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             return true;
         }
         return false;
+    }
+
+    static public function findByEmail($email)
+    {
+        return Owner::find()
+            ->where(['email' => $email])
+            ->one();
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
 }

@@ -3,36 +3,22 @@
 namespace common\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
+
 /**
- * This is the model class for table "User".
+ * This is the model class for table "Admin".
  *
- * @property int $user_id
- * @property string $email
+ * @property int $admin_id
+ * @property string $username
  * @property string $password
- * @property string $phone
- * @property string $avatar_url
- * @property int $user_status
- * @property int $created_at
- * @property int $updated_at
- *
- * @property Booking[] $bookings
  */
-class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
+class Admin extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'User';
-    }
-
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
+        return 'Admin';
     }
 
     /**
@@ -41,14 +27,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'password', 'phone', 'created_at', 'updated_at'], 'required'],
-            [['avatar_url'], 'string'],
-            [['user_status', 'created_at', 'updated_at'], 'integer'],
-            [['email'], 'string', 'max' => 40],
+            [['username', 'password'], 'required'],
+            [['username'], 'string', 'max' => 40],
             [['password'], 'string', 'max' => 255],
-            [['phone'], 'string', 'max' => 13],
-            [['email'], 'unique'],
-            [['phone'], 'unique'],
+            [['username'], 'unique'],
         ];
     }
 
@@ -58,25 +40,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function attributeLabels()
     {
         return [
-            'user_id' => 'User ID',
-            'email' => 'Email',
+            'admin_id' => 'Admin ID',
+            'username' => 'Username',
             'password' => 'Password',
-            'phone' => 'Phone',
-            'avatar_url' => 'Avatar Url',
-            'user_status' => 'User Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getBookings()
-    {
-        return $this->hasMany(Booking::className(), ['user_id' => 'user_id']);
-    }
-
 
     /**
      * Finds an identity by the given ID.
