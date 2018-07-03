@@ -24,8 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'email:email',
             'phone',
             'avatar_url:ntext',
-            'created_at',
-            'updated_at',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

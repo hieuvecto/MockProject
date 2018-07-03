@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 
-$this->title = $model->user_id;
+$this->title = 'Detail User';
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -16,26 +16,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->user_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->user_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
     </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'user_id',
             'email:email',
-            'password',
             'phone',
-            'avatar_url:ntext',
             'user_status',
-            'created_at',
-            'updated_at',
+            'avatar_url:ntext',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

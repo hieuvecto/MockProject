@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'password',
             'phone',
             'avatar_url:ntext',
-            //'user_status',
+            'user_status',
             //'created_at',
             //'updated_at',
 

@@ -15,15 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $pitch->pitch_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $pitch->pitch_id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-        <?= Html::a('Extend', ['extend', 'id' => $pitch->pitch_id], ['class' => 'btn btn-info']) ?>
+        <?= Html::a('Book', ['create', 'sub_pitch_id' => $subPitch->sub_pitch_id], 
+            ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?= DetailView::widget([

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $pitch common\models\Pitch */
+/* @var $model common\models\Pitch */
 
 $this->title = $pitch->name;
 $this->params['breadcrumbs'][] = ['label' => 'Pitches', 'url' => ['index']];
@@ -38,23 +38,39 @@ $this->params['breadcrumbs'][] = $this->title;
             'phone_number',
             'created_at:datetime',
             'updated_at:datetime',
-            [
-                'attribute' => 'Start Time',
-                'value' => $subPitch->start_time
-            ],
-            [
-                'attribute' => 'End Time',
-                'value' => $subPitch->end_time
-            ],
-            [
-                'attribute' => 'Price Per Hour',
-                'value' => $subPitch->price_per_hour . ' ' . $subPitch->currency
-            ],
-            [
-                'attribute' => 'Status',
-                'value' => $subPitch->status ? 'free' : 'busy'
-            ],
         ],
     ]) ?>
+
+    <h1>Sub pitches</h1>
+
+    <?php foreach ($subPitches as $model): ?>
+        <p>
+            <?= Html::a('Update', ['sub-pitch/update', 'id' => $model->sub_pitch_id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Delete', ['sub-pitch/delete', 'id' => $model->sub_pitch_id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to delete this item?',
+                    'method' => 'post',
+                ],
+            ]) ?>
+        </p>
+        <?= DetailView::widget([
+            'model' => $model,
+            'id' => 'sub-pitch-' . $model->sub_pitch_id,
+            'attributes' => [
+                'name',
+                'description:ntext',
+                'status',
+                'start_time',
+                'end_time',
+                [
+                    'attribute' => 'Price Per Hour',
+                    'value' => $model->price_per_hour . ' ' . $model->currency
+                ],
+                'created_at:datetime',
+                'updated_at:datetime',
+            ],
+        ]) ?>
+    <?php endforeach ?>
 
 </div>

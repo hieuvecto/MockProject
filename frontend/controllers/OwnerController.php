@@ -5,7 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use common\models\Owner;
 use common\models\OwnerSearch;
-use common\models\LoginOwnerForm;
+use common\models\LoginForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,6 +26,7 @@ class OwnerController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    //'logout' => ['POST'],
                 ],
             ],
             'access' => [
@@ -51,7 +52,7 @@ class OwnerController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index'],
+                        'actions' => ['index', 'logout'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -64,7 +65,7 @@ class OwnerController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {
+    {   
         $searchModel = new OwnerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -168,6 +169,7 @@ class OwnerController extends Controller
             'model' => $model,
         ]);
     }
+
     /**
      * Deletes an existing Owner model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -193,7 +195,7 @@ class OwnerController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginOwnerForm();
+        $model = new LoginForm(Owner::className());
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
@@ -203,6 +205,18 @@ class OwnerController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    /**
+     * Logs out the current user.
+     *
+     * @return mixed
+     */
+    public function actionLogout()
+    {
+        Yii::$app->owner->logout();
+
+        return $this->goHome();
     }
 
     /**

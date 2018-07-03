@@ -4,8 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "630d5f1d19e73b0163f900453171fba5",
+    "content-hash": "d011e94f0b16ad822bcd6b395e51d0b2",
     "packages": [
+        {
+            "name": "borales/yii2-phone-input",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Borales/yii2-phone-input.git",
+                "reference": "0a9b27e552e165243544818c533c4fd86702bcf2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Borales/yii2-phone-input/zipball/0a9b27e552e165243544818c533c4fd86702bcf2",
+                "reference": "0a9b27e552e165243544818c533c4fd86702bcf2",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/intl-tel-input": "^11",
+                "giggsey/libphonenumber-for-php": "^8",
+                "yiisoft/yii2": ">=2.0.1"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "borales\\extensions\\phoneInput\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Borales (Alexandr Bordun)",
+                    "email": "bordun.alexandr@gmail.com"
+                }
+            ],
+            "description": "Yii2 International telephone numbers - Asset Bundle, Behavior, Validator, Widget",
+            "homepage": "https://github.com/Borales/yii2-phone-input",
+            "keywords": [
+                "international telephone numbers",
+                "intl-tel-input",
+                "libphonenumber",
+                "yii2"
+            ],
+            "time": "2017-06-11T08:24:02+00:00"
+        },
         {
             "name": "bower-asset/bootstrap",
             "version": "v3.3.7",
@@ -51,6 +96,25 @@
             ]
         },
         {
+            "name": "bower-asset/intl-tel-input",
+            "version": "v11.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jackocnr/intl-tel-input.git",
+                "reference": "eff3b2210a1f9e7c72fa1f9af8987c5f60411307"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jackocnr/intl-tel-input/zipball/eff3b2210a1f9e7c72fa1f9af8987c5f60411307",
+                "reference": "eff3b2210a1f9e7c72fa1f9af8987c5f60411307",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.7"
+            },
+            "type": "bower-asset"
+        },
+        {
             "name": "bower-asset/jquery",
             "version": "3.2.1",
             "source": {
@@ -68,6 +132,44 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "bower-asset/jquery-ui",
+            "version": "1.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/jqueryui.git",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/44ecf3794cc56b65954cc19737234a3119d036cc",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/jqueryui-timepicker-addon",
+            "version": "v1.6.3",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:trentrichardson/jQuery-Timepicker-Addon.git",
+                "reference": "397d6ed930649ea7224123d140d341e9f3ffaba6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/trentrichardson/jQuery-Timepicker-Addon/zipball/397d6ed930649ea7224123d140d341e9f3ffaba6",
+                "reference": "397d6ed930649ea7224123d140d341e9f3ffaba6",
+                "shasum": null
+            },
+            "type": "bower-asset"
         },
         {
             "name": "bower-asset/punycode",
@@ -324,6 +426,181 @@
                 "html"
             ],
             "time": "2018-02-23T01:58:20+00:00"
+        },
+        {
+            "name": "giggsey/libphonenumber-for-php",
+            "version": "8.9.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/giggsey/libphonenumber-for-php.git",
+                "reference": "420621360d56499ac1b0e6293561ed8661017c6b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/420621360d56499ac1b0e6293561ed8661017c6b",
+                "reference": "420621360d56499ac1b0e6293561ed8661017c6b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "giggsey/locale": "^1.2",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "pear/pear-core-minimal": "^1.9",
+                "pear/pear_exception": "^1.0",
+                "pear/versioncontrol_git": "^0.5",
+                "phing/phing": "^2.7",
+                "phpunit/phpunit": "^4.8|^5.0",
+                "satooshi/php-coveralls": "^1.0|^2.0",
+                "symfony/console": "^2.8|^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "libphonenumber\\": "src/"
+                },
+                "exclude-from-classmap": [
+                    "/src/data/",
+                    "/src/carrier/data/",
+                    "/src/geocoding/data/",
+                    "/src/timezone/data/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Joshua Gigg",
+                    "email": "giggsey@gmail.com",
+                    "homepage": "https://giggsey.com/"
+                }
+            ],
+            "description": "PHP Port of Google's libphonenumber",
+            "homepage": "https://github.com/giggsey/libphonenumber-for-php",
+            "keywords": [
+                "geocoding",
+                "geolocation",
+                "libphonenumber",
+                "mobile",
+                "phonenumber",
+                "validation"
+            ],
+            "time": "2018-06-14T11:25:48+00:00"
+        },
+        {
+            "name": "giggsey/locale",
+            "version": "1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/giggsey/Locale.git",
+                "reference": "3c9cc23c15851c54cb3ccd41a00fd4b5a89feeff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/giggsey/Locale/zipball/3c9cc23c15851c54cb3ccd41a00fd4b5a89feeff",
+                "reference": "3c9cc23c15851c54cb3ccd41a00fd4b5a89feeff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "pear/pear-core-minimal": "^1.9",
+                "pear/pear_exception": "^1.0",
+                "pear/versioncontrol_git": "^0.5",
+                "phing/phing": "~2.7",
+                "phpunit/phpunit": "^4.8|^5.0",
+                "satooshi/php-coveralls": "^1.0",
+                "symfony/console": "^2.8|^3.0|^4.0",
+                "symfony/filesystem": "^2.8|^3.0|^4.0",
+                "symfony/finder": "^2.8|^3.0|^4.0",
+                "symfony/process": "^2.8|^3.0|^4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Giggsey\\Locale\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joshua Gigg",
+                    "email": "giggsey@gmail.com",
+                    "homepage": "http://giggsey.com/"
+                }
+            ],
+            "description": "Locale functions required by libphonenumber-for-php",
+            "time": "2018-04-03T15:53:12+00:00"
+        },
+        {
+            "name": "janisto/yii2-timepicker",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/janisto/yii2-timepicker.git",
+                "reference": "91b3e8483404f0667eaa9fd73acf121a99494999"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/janisto/yii2-timepicker/zipball/91b3e8483404f0667eaa9fd73acf121a99494999",
+                "reference": "91b3e8483404f0667eaa9fd73acf121a99494999",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jqueryui-timepicker-addon": ">=1.5.2",
+                "php": ">=5.4.0",
+                "yiisoft/yii2": "*",
+                "yiisoft/yii2-jui": ">=2.0.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5",
+                "scrutinizer/ocular": "~1.1"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "asset-installer-paths": {
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "janisto\\timepicker\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "public domain"
+            ],
+            "authors": [
+                {
+                    "name": "Jani Mikkonen",
+                    "email": "janisto@php.net"
+                }
+            ],
+            "description": "Yii 2 widget for jQuery Timepicker Addon.",
+            "homepage": "https://github.com/janisto/yii2-timepicker",
+            "keywords": [
+                "date",
+                "datetime",
+                "extension",
+                "time",
+                "timepicker",
+                "widget",
+                "yii2"
+            ],
+            "time": "2015-11-12T10:16:09+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -593,6 +870,52 @@
                 "yii2"
             ],
             "time": "2018-03-21T16:15:55+00:00"
+        },
+        {
+            "name": "yiisoft/yii2-jui",
+            "version": "2.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-jui.git",
+                "reference": "ce45c16d4fbbe7d1c516d8d0e8311e07f6138eed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-jui/zipball/ce45c16d4fbbe7d1c516d8d0e8311e07f6138eed",
+                "reference": "ce45c16d4fbbe7d1c516d8d0e8311e07f6138eed",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-ui": "~1.12.1",
+                "yiisoft/yii2": "~2.0.4"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\jui\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com"
+                }
+            ],
+            "description": "The Jquery UI extension for the Yii framework",
+            "keywords": [
+                "jQuery UI",
+                "yii2"
+            ],
+            "time": "2017-11-25T15:32:29+00:00"
         },
         {
             "name": "yiisoft/yii2-swiftmailer",

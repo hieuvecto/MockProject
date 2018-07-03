@@ -7,14 +7,21 @@ use yii\base\Model;
 /**
  * Login form
  */
-class LoginOwnerForm extends Model
+class LoginForm extends Model
 {
     public $email;
     public $password;
     public $rememberMe = true;
 
-    private $_owner;
+    private $_className;
+    private $_model;
 
+    function __construct($className) 
+    {
+        parent::__construct();
+
+        $this->_className = $className;
+    }
 
     /**
      * {@inheritdoc}
@@ -41,22 +48,26 @@ class LoginOwnerForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $owner = $this->getOwner();
-            if (!$owner || !$owner->validatePassword($this->password)) {
+            $model = $this->getModel();
+            if (!$model || !$model->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect email or password.');
             }
         }
     }
 
     /**
-     * Logs in a owner using the provided email and password.
+     * Logs in a model using the provided email and password.
      *
-     * @return bool whether the owner is logged in successfully
+     * @return bool whether the model is logged in successfully
      */
     public function login()
-    {
+    {   
+        $array = explode('\\', $this->_className);
+        $identityClass = strtolower($array[count($array)-1]);
+        Yii::info($identityClass, 'Identity class');
         if ($this->validate()) {
-            return Yii::$app->owner->login($this->getOwner(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return Yii::$app->$identityClass
+            ->login($this->getModel(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
         
         return false;
@@ -67,12 +78,12 @@ class LoginOwnerForm extends Model
      *
      * @return Owner|null
      */
-    protected function getOwner()
+    protected function getModel()
     {
-        if ($this->_owner === null) {
-            $this->_owner = Owner::findByEmail($this->email);
+        if ($this->_model === null) {
+            $this->_model = call_user_func($this->_className . '::findByEmail', $this->email);
         }
 
-        return $this->_owner;
+        return $this->_model;
     }
 }

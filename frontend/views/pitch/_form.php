@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use janisto\timepicker\TimePicker;
+use borales\extensions\phoneInput\PhoneInput;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Pitch */
@@ -12,30 +14,67 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $pitchForm->errorSummary($form); ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+    <fieldset>
+        <legend>Pitch</legend>
+        <?= $form->field($pitchForm->Pitch, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'owner_id')->textInput() ?>
+        <?= $form->field($pitchForm->Pitch, 'description')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'city')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($pitchForm->Pitch, 'city')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'district')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($pitchForm->Pitch, 'district')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'street')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($pitchForm->Pitch, 'street')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'apartment_number')->textInput() ?>
+        <?= $form->field($pitchForm->Pitch, 'apartment_number')->textInput() ?>
 
-    <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($pitchForm->Pitch, 'phone_number')
+            ->widget(PhoneInput::className(), [
+            'jsOptions' => [
+                'allowExtensions' => true,
+                'preferredCountries' => ['vn', 'cn', 'us'],
+            ]
+        ])?>
+    </fieldset>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
+    <fieldset>
+        <legend>SubPitch</legend>
+        <?= $form->field($pitchForm->SubPitch, 'start_time')
+            ->widget(TimePicker::className(), [
+                //'language' => 'fi',
+                'mode' => 'time',
+                'clientOptions' => [
+                    'hour' => date('H'),
+                    'minute' => date('i'),
+                    'second' => date('s'),
+                ]
+            ]) ?>
 
-    <?= $form->field($model, 'updated_at')->textInput() ?>
+        <?= $form->field($pitchForm->SubPitch, 'end_time')
+            ->widget(TimePicker::className(), [
+                //'language' => 'fi',
+                'mode' => 'time',
+                'clientOptions' => [
+                    'hour' => date('H'),
+                    'minute' => date('i'),
+                    'second' => date('s'),
+                ]
+            ]) ?>
+
+        <?= $form
+            ->field($pitchForm->SubPitch, 'price_per_hour')
+            ->textInput(['type' => 'number']) ?>
+
+        <?= $form->field($pitchForm->SubPitch, 'currency')
+        ->textInput(['maxlength' => true, 'readonly' => true]) ?>
+             
+    </fieldset>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
-
     <?php ActiveForm::end(); ?>
 
 </div>

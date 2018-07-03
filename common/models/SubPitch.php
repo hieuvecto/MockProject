@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "SubPitch".
@@ -32,13 +33,20 @@ class SubPitch extends \yii\db\ActiveRecord
         return 'SubPitch';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
+    
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['name', 'pitch_id', 'start_time', 'end_time', 'price_per_hour', 'created_at', 'updated_at'], 'required'],
+            [['name', 'start_time', 'end_time', 'price_per_hour'], 'required'],
             [['description'], 'string'],
             [['pitch_id', 'price_per_hour', 'created_at', 'updated_at'], 'integer'],
             [['start_time', 'end_time'], 'safe'],

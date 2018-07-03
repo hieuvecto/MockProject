@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\OwnerSearch */
@@ -18,22 +19,23 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Owner', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <?php Pjax::begin(); ?>
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+                'owner_id',
+                'email:email',
+                'password',
+                'phone',
+                'avatar_url:ntext',
+                //'created_at',
+                //'updated_at',
 
-            'owner_id',
-            'email:email',
-            'password',
-            'phone',
-            'avatar_url:ntext',
-            //'created_at',
-            //'updated_at',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+                ['class' => 'yii\grid\ActionColumn'],
+            ],
+        ]); ?>
+    <?php Pjax::end(); ?>
 </div>

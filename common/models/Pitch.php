@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use borales\extensions\phoneInput\PhoneInputValidator;
 
 /**
  * This is the model class for table "Pitch".
@@ -32,13 +34,20 @@ class Pitch extends \yii\db\ActiveRecord
         return 'Pitch';
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['name', 'owner_id', 'city', 'district', 'street', 'apartment_number', 'phone_number', 'created_at', 'updated_at'], 'required'],
+            [['name', 'owner_id', 'city', 'district', 'street', 'apartment_number', 'phone_number'], 'required'],
             [['description'], 'string'],
             [['owner_id', 'apartment_number', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 45],

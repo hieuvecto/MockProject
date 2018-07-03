@@ -15,18 +15,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a('Create Pitch', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?php Pjax::begin(); ?>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-                'name',
+                [
+                        'attribute'=>'name',
+                        'format'=>'raw',
+                        'value' => function($data)
+                        {
+                            return Html::a($data->name, 
+                                    ['view-pitch','pitch_id'=> $data->pitch_id], 
+                                    ['title' => 'View','class'=>'no-pjax']);
+                        }
+                ],
                 [
                     'attribute' => 'description',
                     'value' => function($dataProvider) {

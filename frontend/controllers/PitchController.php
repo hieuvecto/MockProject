@@ -5,10 +5,12 @@ namespace frontend\controllers;
 use Yii;
 use common\models\Pitch;
 use common\models\PitchSearch;
+use common\models\SubPitch;
+use frontend\models\PitchForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\filters\AccessControl;
 /**
  * PitchController implements the CRUD actions for Pitch model.
  */
@@ -26,6 +28,34 @@ class PitchController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'user'=>'owner', // this user object defined in web.php
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],                 
+                        'roles' => ['@'],
+
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view', 'update', 'delete', 'extend'],
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            if ($this->isAuthor()) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['@'],
+                    ],
+                ],
+            ]
         ];
     }
 
@@ -36,7 +66,12 @@ class PitchController extends Controller
     public function actionIndex()
     {
         $searchModel = new PitchSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $params = Yii::$app->request->queryParams;
+        $params['PitchSearch']['owner_id'] = Yii::$app->owner->identity->owner_id;
+        $dataProvider = $searchModel->search($params);
+        $dataProvider->pagination = [
+            'pageSize' => 10,
+        ];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -51,9 +86,19 @@ class PitchController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {
+    {   
+        $pitch = $this->findModel($id);
+        $subPitches = $pitch->getSubPitches()->all();
+
+        if (count($subPitches) > 1) 
+            return $this->render('view-multiple', [
+                'pitch' => $pitch,
+                'subPitches' => $subPitches
+            ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'pitch' => $pitch,
+            'subPitch' => $subPitches[0],
         ]);
     }
 
@@ -63,14 +108,37 @@ class PitchController extends Controller
      * @return mixed
      */
     public function actionCreate()
-    {
-        $model = new Pitch();
+    {   
+        $pitchForm = new PitchForm;
+
+        if ($pitchForm->Pitch->load(Yii::$app->request->post()) &&
+            $pitchForm->SubPitch->load(Yii::$app->request->post()))
+        {
+            if ($pitchForm->save())
+                return $this->redirect(['view', 'id' => $pitchForm->Pitch->pitch_id]);
+        } 
+
+        return $this->render('create', ['pitchForm' => $pitchForm]);
+    }
+
+    /**
+     * Extend a sub pitch of Pitch model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionExtend($id)
+    {   
+        $pitch = $this->findModel($id);
+        $count = $pitch->getSubPitches()->count()+1;
+        $model = new SubPitch();
+        $model->name = "{$pitch->name} ($count)";
+        $model->pitch_id = $id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->pitch_id]);
+            return $this->redirect(['view', 'id' => $id]);
         }
 
-        return $this->render('create', [
+        return $this->render('extend', [
             'model' => $model,
         ]);
     }
@@ -84,15 +152,31 @@ class PitchController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $pitch = $this->findModel($id);
+        $subPitches = $pitch->getSubPitches()->all();
+        if (count($subPitches) > 1) 
+        {
+            if ($pitch->load(Yii::$app->request->post()) && $pitch->save())
+            {
+                return $this->redirect(['view', 'id' => $pitch->pitch_id]);
+            } 
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->pitch_id]);
+            return $this->render('update-multiple', ['model' => $pitch]);
         }
+        else 
+        {
+            $pitchForm = new PitchForm($pitch, $subPitches[0]);
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+            if ($pitchForm->Pitch->load(Yii::$app->request->post()) &&
+                $pitchForm->SubPitch->load(Yii::$app->request->post()))
+            {
+                if ($pitchForm->save())
+                    return $this->redirect(['view', 'id' => $pitchForm->Pitch->pitch_id]);
+            } 
+
+            return $this->render('update', ['pitchForm' => $pitchForm]);
+        }
+        
     }
 
     /**
@@ -103,7 +187,8 @@ class PitchController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {
+    {   
+        SubPitch::deleteAll(['pitch_id' => $id]);
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -123,5 +208,10 @@ class PitchController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function isAuthor()
+    {   
+        return $this->findModel(Yii::$app->request->get('id'))->owner_id == Yii::$app->owner->identity->owner_id;
     }
 }

@@ -19,7 +19,10 @@ use yii\behaviors\TimestampBehavior;
  * @property Booking[] $bookings
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
-{
+{   
+    public $old_password;
+    public $password_confirm;
+
     /**
      * {@inheritdoc}
      */
@@ -41,7 +44,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'password', 'phone', 'created_at', 'updated_at'], 'required'],
+            [['email', 'password', 'phone'], 'required'],
             [['avatar_url'], 'string'],
             [['user_status', 'created_at', 'updated_at'], 'integer'],
             [['email'], 'string', 'max' => 40],
@@ -49,6 +52,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['phone'], 'string', 'max' => 13],
             [['email'], 'unique'],
             [['phone'], 'unique'],
+            [['email', 'phone'], 'trim'],
         ];
     }
 
@@ -86,8 +90,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-       
-    }
+        return static::findOne($id);  
+    }   
 
     /**
      * Finds an identity by the given token.
@@ -105,7 +109,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function getId()
     {
-        
+        return $this->user_id;  
     }
 
     /**
@@ -135,5 +139,23 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             return true;
         }
         return false;
+    }
+
+    static public function findByEmail($email)
+    {
+        return User::find()
+            ->where(['email' => $email])
+            ->one();
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
 }

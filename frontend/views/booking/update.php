@@ -1,11 +1,12 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Booking */
 
-$this->title = 'Update Booking: ' . $model->booking_id;
+$this->title = 'Update Booking: ';
 $this->params['breadcrumbs'][] = ['label' => 'Bookings', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->booking_id, 'url' => ['view', 'id' => $model->booking_id]];
 $this->params['breadcrumbs'][] = 'Update';
@@ -14,8 +15,13 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <div class="booking-form">
+
     <?= $this->render('_form', [
         'model' => $model,
+        'subPitch' => $subPitch,
     ]) ?>
+
+</div>
 
 </div>
