@@ -8,7 +8,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\PitchSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Pitches';
+$this->title = 'My Pitches';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pitch-index">
@@ -38,6 +38,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 'street',
                 'apartment_number',
                 'phone_number',
+                [
+                    'label' => 'Unverified Booking',
+                    'value' => function($data) {
+                        $subPitches = $data->getSubPitches()->all();
+                        $count = 0;
+
+                        foreach ($subPitches as $subPitch) 
+                        {   
+                            // count unverified bookings
+                            $count += $subPitch->getBookings(['is_verified' => 0])->count();
+                        }
+                        return $count;
+                    },
+                ],
                 'created_at:datetime',
                 'updated_at:datetime',
                 ['class' => 'yii\grid\ActionColumn'],

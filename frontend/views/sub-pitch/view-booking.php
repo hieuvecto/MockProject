@@ -7,24 +7,23 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Booking */
 
 $this->title = 'Booking Detail';
-$this->params['breadcrumbs'][] = ['label' => 'Bookings', 'url' => ['index']];
+$str = $is_verified ? 'Verified Bookings' : 'Unverified Bookings';
+$url = ['list-booking', 'id' => $subPitch->sub_pitch_id, 'is_verified' => $is_verified];
+$this->params['breadcrumbs'][] = ['label' => $str, 'url' => $url];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="booking-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p> 
-        <?php if (!$model->is_verified): ?>
-        <?= Html::a('Update', ['update', 'id' => $model->booking_id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->booking_id], [
+    <p>
+        <?= !$is_verified ? Html::a('Verify', ['verify', 'booking_id' => $model->booking_id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Are you sure you want to verify this booking?',
                 'method' => 'post',
             ],
-        ]) ?>
-        <?php endif; ?>
+        ]) : '' ?>
     </p>
 
     <?= DetailView::widget([

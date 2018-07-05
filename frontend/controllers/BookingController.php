@@ -10,6 +10,7 @@ use common\models\PitchSearch;
 use common\models\SubPitch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\HttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 

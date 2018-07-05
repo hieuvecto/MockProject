@@ -52,27 +52,12 @@ class OwnerController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'logout'],
+                        'actions' => ['logout'],
                         'roles' => ['@'],
                     ],
                 ],
             ]
         ];
-    }
-
-    /**
-     * Lists all Owner models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {   
-        $searchModel = new OwnerSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
     /**

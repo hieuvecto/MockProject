@@ -9,6 +9,7 @@ use common\models\SubPitch;
 use frontend\models\PitchForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 /**
@@ -109,16 +110,18 @@ class PitchController extends Controller
      */
     public function actionCreate()
     {   
-        $pitchForm = new PitchForm;
+        $pitchForm = new PitchForm();
 
         if ($pitchForm->Pitch->load(Yii::$app->request->post()) &&
-            $pitchForm->SubPitch->load(Yii::$app->request->post()))
-        {
-            if ($pitchForm->save())
-                return $this->redirect(['view', 'id' => $pitchForm->Pitch->pitch_id]);
+            $pitchForm->SubPitch->load(Yii::$app->request->post()) &&
+            $pitchForm->save())
+        {   
+            return $this->redirect(['view', 'id' => $pitchForm->Pitch->pitch_id]);   
         } 
 
-        return $this->render('create', ['pitchForm' => $pitchForm]);
+        return $this->render('create', [
+            'pitchForm' => $pitchForm,
+        ]);
     }
 
     /**
@@ -133,8 +136,9 @@ class PitchController extends Controller
         $model = new SubPitch();
         $model->name = "{$pitch->name} ($count)";
         $model->pitch_id = $id;
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+    
+        if ($model->load(Yii::$app->request->post()) &&
+            $model->save(false)) {
             return $this->redirect(['view', 'id' => $id]);
         }
 
@@ -154,27 +158,34 @@ class PitchController extends Controller
     {
         $pitch = $this->findModel($id);
         $subPitches = $pitch->getSubPitches()->all();
-        if (count($subPitches) > 1) 
-        {
-            if ($pitch->load(Yii::$app->request->post()) && $pitch->save())
-            {
-                return $this->redirect(['view', 'id' => $pitch->pitch_id]);
-            } 
 
-            return $this->render('update-multiple', ['model' => $pitch]);
+        if (count($subPitches) > 1) 
+        {   
+            if ($pitch->load(Yii::$app->request->post()) && $pitch->save(false)) 
+            {   
+                return $this->redirect(['view', 'id' => $pitch->pitch_id]);       
+            }
+            
+            return $this->render('update-multiple', [
+                'model' => $pitch,
+            ]);
         }
         else 
-        {
+        {   
             $pitchForm = new PitchForm($pitch, $subPitches[0]);
 
             if ($pitchForm->Pitch->load(Yii::$app->request->post()) &&
-                $pitchForm->SubPitch->load(Yii::$app->request->post()))
-            {
-                if ($pitchForm->save())
-                    return $this->redirect(['view', 'id' => $pitchForm->Pitch->pitch_id]);
-            } 
-
-            return $this->render('update', ['pitchForm' => $pitchForm]);
+                $pitchForm->SubPitch->load(Yii::$app->request->post()) &&
+                $pitchForm->save())
+            {   
+                return $this->redirect(['view', 
+                    'id' => $pitchForm->Pitch->pitch_id
+                ]);
+            }
+            
+            return $this->render('update', [
+                'pitchForm' => $pitchForm,
+            ]);
         }
         
     }
@@ -188,8 +199,21 @@ class PitchController extends Controller
      */
     public function actionDelete($id)
     {   
-        SubPitch::deleteAll(['pitch_id' => $id]);
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $subPitches = $model->getSubPitches()->all();
+
+        foreach ($subPitches as $subPitch) 
+            if ($subPitch->delete() === false)
+            {
+                Yii::$app->session->setFlash('error', 'There was an error deleting sub pitch. Try again');
+                return $this->redirect(['view', 'id' => $id ]);
+            }
+        
+        if ($model->delete() === false)
+        {
+            Yii::$app->session->setFlash('error', 'There was an error deleting pitch. Try again');
+            return $this->redirect(['view', 'id' => $id ]);
+        }
 
         return $this->redirect(['index']);
     }

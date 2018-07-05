@@ -1,8 +1,6 @@
 <?php
 namespace common\widgets;
-
 use Yii;
-
 /**
  * Alert widget renders a message from session flash. All flash messages are displayed
  * in the sequence they were assigned using setFlash. You can set message as following:
@@ -42,8 +40,6 @@ class Alert extends \yii\bootstrap\Widget
      * Array will be passed to [[\yii\bootstrap\Alert::closeButton]].
      */
     public $closeButton = [];
-
-
     /**
      * {@inheritdoc}
      */
@@ -52,12 +48,10 @@ class Alert extends \yii\bootstrap\Widget
         $session = Yii::$app->session;
         $flashes = $session->getAllFlashes();
         $appendClass = isset($this->options['class']) ? ' ' . $this->options['class'] : '';
-
         foreach ($flashes as $type => $flash) {
             if (!isset($this->alertTypes[$type])) {
                 continue;
             }
-
             foreach ((array) $flash as $i => $message) {
                 echo \yii\bootstrap\Alert::widget([
                     'body' => $message,
@@ -68,7 +62,6 @@ class Alert extends \yii\bootstrap\Widget
                     ]),
                 ]);
             }
-
             $session->removeFlash($type);
         }
     }

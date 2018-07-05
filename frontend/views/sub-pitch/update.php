@@ -54,6 +54,8 @@ $this->params['breadcrumbs'][] = 'Update';
 	    <?= $form->field($model, 'currency')
 	    	->textInput(['maxlength' => true, 'readonly' => true]) ?>
 
+	    <?= $form->field($model, 'imageFile')->fileInput() ?>
+	    
 	    <div class="form-group">
 	        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
 	    </div>

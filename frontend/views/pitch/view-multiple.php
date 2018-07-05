@@ -29,6 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $pitch,
         'attributes' => [
+            [
+                'attribute'=>'avatar_url',
+                'value'=>$pitch->avatar_url,
+                'format' => ['image',['width'=>'500','height'=>'300']],
+            ],
             'name',
             'description:ntext',
             'city',
@@ -53,11 +58,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     'method' => 'post',
                 ],
             ]) ?>
+             You have <?= $model->getBookings(['is_verified' => 0])->count() ?> unverified booking. Verify it
+            <?= Html::a('Verify', ['sub-pitch/list-booking', 'id' => $model->sub_pitch_id], ['class' => 'btn btn-info']) ?>
         </p>
         <?= DetailView::widget([
             'model' => $model,
             'id' => 'sub-pitch-' . $model->sub_pitch_id,
             'attributes' => [
+                [
+                    'attribute'=>'avatar_url',
+                    'value'=>$model->avatar_url,
+                    'format' => ['image',['width'=>'500','height'=>'300']],
+                ],
                 'name',
                 'description:ntext',
                 'status',
@@ -66,6 +78,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'attribute' => 'Price Per Hour',
                     'value' => $model->price_per_hour . ' ' . $model->currency
+                ],
+                [
+                    'label' => 'Verified Bookings',
+                    'value' => $model->getBookings(['is_verified' => 1])->count(),
                 ],
                 'created_at:datetime',
                 'updated_at:datetime',

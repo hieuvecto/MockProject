@@ -29,6 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $pitch,
         'attributes' => [
+            [
+                'attribute'=>'avatar_url',
+                'value'=>$pitch->avatar_url,
+                'format' => ['image',['width'=>'500','height'=>'300']],
+            ],
             'name',
             'description:ntext',
             'city',

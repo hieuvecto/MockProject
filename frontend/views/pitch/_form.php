@@ -37,6 +37,8 @@ use borales\extensions\phoneInput\PhoneInput;
                 'preferredCountries' => ['vn', 'cn', 'us'],
             ]
         ])?>
+
+        <?= $form->field($pitchForm->Pitch, 'imageFile')->fileInput() ?>
     </fieldset>
 
     <fieldset>

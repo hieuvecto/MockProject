@@ -44,7 +44,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'phone_number',
                 'created_at:datetime',
                 'updated_at:datetime',
-                ['class' => 'yii\grid\ActionColumn'],
             ],
         ]); ?>
     <?php Pjax::end(); ?>
