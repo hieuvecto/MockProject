@@ -16,8 +16,7 @@ use yii\web\UploadedFile;
  * @property int $owner_id
  * @property string $city
  * @property string $district
- * @property string $street
- * @property int $apartment_number
+ * @property string $address
  * @property string $phone_number
  * @property int $created_at
  * @property int $updated_at
@@ -53,12 +52,12 @@ class Pitch extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'owner_id', 'city', 'district', 'street', 'apartment_number', 'phone_number'], 'required'],
+            [['name', 'owner_id', 'city', 'district', 'address', 'phone_number'], 'required'],
             [['description', 'avatar_url'], 'string'],
-            [['owner_id', 'apartment_number', 'created_at', 'updated_at'], 'integer'],
+            [['owner_id', 'created_at', 'updated_at'], 'integer'],
             [['name'], 'string', 'max' => 45],
             [['city', 'district'], 'string', 'max' => 20],
-            [['street'], 'string', 'max' => 30],
+            [['address'], 'string', 'max' => 40],
             [['phone_number'], 'string', 'max' => 13],
             [['name'], 'unique'],
             [['owner_id'], 'exist', 'skipOnError' => true, 'targetClass' => Owner::className(), 'targetAttribute' => ['owner_id' => 'owner_id']],
@@ -78,8 +77,7 @@ class Pitch extends \yii\db\ActiveRecord
             'owner_id' => 'Owner ID',
             'city' => 'City',
             'district' => 'District',
-            'street' => 'Street',
-            'apartment_number' => 'Apartment Number',
+            'address' => 'Address',
             'phone_number' => 'Phone Number',
             'avatar_url' => 'Avatar Url',
             'created_at' => 'Created At',
@@ -149,8 +147,7 @@ class Pitch extends \yii\db\ActiveRecord
             'owner_id',
             'city',
             'district',
-            'street',
-            'apartment_number',
+            'address',
             'phone_number',
             'avatar_url',
             'created_at',

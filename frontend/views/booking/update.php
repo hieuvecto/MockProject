@@ -1,27 +1,25 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-
-/* @var $this yii\web\View */
-/* @var $model common\models\Booking */
-
-$this->title = 'Update Booking: ';
-$this->params['breadcrumbs'][] = ['label' => 'Bookings', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->booking_id, 'url' => ['view', 'id' => $model->booking_id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Thay đổi đặt sân';
 ?>
-<div class="booking-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <div class="booking-form">
-
+<div class="container m-t-80 list-rps">
     <?= $this->render('_form', [
         'model' => $model,
         'subPitch' => $subPitch,
+        'pitch' => $pitch,
+        'class' => 'backdrop-booking',
     ]) ?>
-
 </div>
 
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id='calendar'></div>
+            </div>       
+        </div>
+
+    </div>
 </div>

@@ -2,8 +2,6 @@
 
 namespace common\models;
 
-use Yii;
-
 /**
  * This is the model class for table "Admin".
  *
@@ -98,7 +96,7 @@ class Admin extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         if (parent::beforeSave($insert)) {
             if ($this->isNewRecord) {
                 $this->auth_key = \Yii::$app->security->generateRandomString();
-                $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+                $this->password = \Yii::$app->getSecurity()->generatePasswordHash($this->password);
             }
             return true;
         }

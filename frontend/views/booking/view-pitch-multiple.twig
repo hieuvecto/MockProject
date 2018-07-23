@@ -1,0 +1,70 @@
+{{ set(this, 'title', pitch.name) }}
+
+{{ this.registerJsFile('/js/has-top-backdrop.js', {'depends': 'frontend\\assets\\MapCalendarAsset' }) }}
+
+<div class="container-fluid">
+  <div class="backdrop">
+
+    <div class="backdrop-img" style="background-image: url({{Utils.imgSrc(pitch.avatar_url)}});">
+        <div class="overlay"></div>
+    </div>
+    <div class="backdrop-content">
+        <hgroup>
+            <h1>{{pitch.name}}</h1>        
+            <h4><i class="fa fa-map-marker" aria-hidden="true"></i>{{pitch.address}}, quận {{pitch.district}}, TP {{pitch.city}}</h4>
+            <h4><i class="fa fa-phone" aria-hidden="true"></i>{{pitch.phone_number}}</h4>
+        </hgroup>
+    </div>
+    
+  </div>
+</div>
+
+<div class="container p-t-50 list-rps list-rps-no-form">
+    <div class="row">
+        <div class="col-md-4">
+            <h2 class="title">Mô tả</h2>
+            <p>{{pitch.description}}</p>
+        </div>
+        <div class="col-md-8">
+            <h2 class="title">Thông tin thêm</h2>
+            <p>Sân này hiện có {{subPitches|length}} sân con</p>
+        </div>
+    </div>
+    {% for subPitch in subPitches %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img class="img-fluid" src="{{Utils.imgSrc(subPitch.avatar_url)}}">
+            </div>     
+        </div>
+        <div class="col-md-4">
+            <h3 class="title">{{subPitch.name}}</h3>
+            <p>{{subPitch.description}}</p>
+        </div>
+        <div class="col-md-4">
+            <h3 class="title">Thông tin thêm</h3>
+            <p>Giá cả: {{subPitch.price_per_hour|number_format(0, '.', ',')}} {{subPitch.currency}} / 1 giờ</p>
+            <p>Loại sân: {{subPitch.size}} người</p>
+            <p>Giờ mở cửa: {{subPitch.start_time|date('H:i')}} - {{subPitch.end_time|date('H:i')}}</p>
+            <Button type="button" class="btn-modal btn btn-hero btn-md" data-id="{{subPitch.sub_pitch_id}}" style="width: 150px;">Giờ trống sân</Button>
+            {{ html.a('Đặt Sân', {0: 'create', 'sub_pitch_id': subPitch.sub_pitch_id}, {'class': 'btn btn-hero btn-md', 'style': 'width: 150px; margin-left: 1.5rem;'}) | raw}}
+        </div>
+    </div>
+    {% endfor %}
+
+    <h2 class="title">Bản đồ</h2>
+    <div id="map_canvas" style="width: 100%; height: 40vh;" class="m-b-30"></div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="calendar"></div>
+            </div>       
+        </div>
+
+    </div>
+</div>

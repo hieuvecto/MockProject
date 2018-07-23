@@ -2,33 +2,38 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\helpers\Utils;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 
-$this->title = 'Change password: ' . $model->email;
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->user_id, 'url' => ['view', 'id' => $model->user_id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Đổi mật khẩu';
 ?>
-<div class="user-update">
+<div class="container m-t-80 m-b-50">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="row m-t-30">
+    	<div class="col-md-4 m-lr-auto">
+    		<h1 class="title text-center m-b-30"><?= Html::encode($this->title) ?></h1>
+    		<?php $form = ActiveForm::begin(); ?>
 
-    <div class="user-form">
+    		<span class="label-input">Mật khẩu cũ</span>
+		    <?= $form->field($model, 'old_password')->passwordInput(['class' => 'input101'])->label(false) ?>
 
-	    <?php $form = ActiveForm::begin(); ?>
+		    <span class="label-input">Mật khẩu mới</span>
+		    <?= $form->field($model, 'password')->passwordInput(['class' => 'input101'])->label(false) ?>
 
-	    <?= $form->field($model, 'old_password')->passwordInput() ?>
+		    <span class="label-input">Xác nhận mật khẩu</span>
+		    <?= $form->field($model, 'password_confirm')->passwordInput(['class' => 'input101'])->label(false) ?>
 
-	    <?= $form->field($model, 'password')->passwordInput() ?>
+		    <div class="form-group m-t-30">
+                <div class="wrap-login101-form-btn">
+                    <div class="login101-form-bgbtn"></div>
+                    <button type="submit" class="login101-form-btn">Lưu</button>                            
+                </div>
+            </div>
 
-	    <?= $form->field($model, 'password_confirm')->passwordInput() ?>
-
-	    <div class="form-group">
-	        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-	    </div>
-
-	    <?php ActiveForm::end(); ?>
+		    <?php ActiveForm::end(); ?>	
+    	</div>
 
 	</div>
 

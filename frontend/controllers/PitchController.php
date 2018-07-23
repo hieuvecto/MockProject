@@ -12,11 +12,13 @@ use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+
 /**
  * PitchController implements the CRUD actions for Pitch model.
  */
 class PitchController extends Controller
-{
+{   
+    public $layout = 'owner';
     /**
      * {@inheritdoc}
      */
@@ -88,6 +90,7 @@ class PitchController extends Controller
      */
     public function actionView($id)
     {   
+        $this->layout = 'owner-map-calendar';
         $pitch = $this->findModel($id);
         $subPitches = $pitch->getSubPitches()->all();
 

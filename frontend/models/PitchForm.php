@@ -40,7 +40,7 @@ class PitchForm extends Model
     {   
         $this->Pitch->owner_id = Yii::$app->owner->identity->owner_id;
 
-        $this->SubPitch->name = $this->Pitch->name . ' (1)';
+        $this->SubPitch->name = $this->Pitch->name;
         $this->SubPitch->description = $this->Pitch->description;
         
         $attributePitch = [

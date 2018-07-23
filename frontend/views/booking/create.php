@@ -1,27 +1,25 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use yii\widgets\DetailView;
-use janisto\timepicker\TimePicker;
-
-/* @var $this yii\web\View */
-/* @var $model common\models\Booking */
-
-$this->title = 'Create Booking';
-$this->params['breadcrumbs'][] = ['label' => 'Bookings', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Đặt sân';
 ?>
-<div class="booking-create">
-
-    <h1><?= Html::encode($this->title . ' ' . $subPitch->name) ?></h1>
-
-    <div class="booking-form">
-
+<div class="container m-t-80 list-rps">
     <?= $this->render('_form', [
         'model' => $model,
         'subPitch' => $subPitch,
+        'pitch' => $pitch,
+        'class' => 'backdrop-booking',
     ]) ?>
 </div>
 
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id='calendar'></div>
+            </div>       
+        </div>
+
+    </div>
 </div>

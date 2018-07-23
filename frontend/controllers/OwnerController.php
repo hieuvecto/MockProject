@@ -15,7 +15,9 @@ use yii\filters\AccessControl;
  * OwnerController implements the CRUD actions for Owner model.
  */
 class OwnerController extends Controller
-{
+{   
+    public $layout = 'owner';
+    
     /**
      * {@inheritdoc}
      */
@@ -79,7 +81,8 @@ class OwnerController extends Controller
      * @return mixed
      */
     public function actionSignup()
-    {
+    {   
+        $this->layout = 'simple';
         $model = new Owner();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -175,7 +178,8 @@ class OwnerController extends Controller
      * @return mixed
      */
     public function actionLogin()
-    {
+    {   
+        $this->layout = 'simple';
         if (!Yii::$app->owner->isGuest) {
             return $this->goHome();
         }

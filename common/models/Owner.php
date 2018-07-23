@@ -21,6 +21,7 @@ class Owner extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {   
     public $old_password;
     public $password_confirm;
+    public $imageFile;
     /**
      * {@inheritdoc}
      */
@@ -51,6 +52,8 @@ class Owner extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email'], 'unique'],
             [['phone'], 'unique'],
             [['email', 'phone'], 'trim'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
+            [['old_password', 'password_confirm'], 'safe'],
         ];
     }
 
@@ -69,6 +72,7 @@ class Owner extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'avatar_url' => 'Avatar Url',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'image_file' => 'Image File',
         ];
     }
 
@@ -80,6 +84,20 @@ class Owner extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $this->hasMany(Pitch::className(), ['owner_id' => 'owner_id']);
     }
 
+    /** Deletes avatar before delete record.
+     *
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        if (!parent::beforeDelete()) {
+            return false;
+        }
+        
+        if (isset($this->avatar_url))
+            return unlink(Yii::getAlias('@webroot') . '/'. $this->avatar_url);
+        return true;
+    }
 
     /**
      * Finds an identity by the given ID.
@@ -138,6 +156,49 @@ class Owner extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             return true;
         }
         return false;
+    }
+
+    public function save($useParent = true, $runValidation = true, $attributeNames = null)
+    {   
+        if (!$useParent) 
+        {
+            $this->imageFile = UploadedFile::getInstance($this, 'imageFile');
+            if (isset($this->imageFile))
+            {
+                $path = 'uploads/' . uniqid('UserImage', true) . '.' . $this->imageFile->extension;
+                $old_avatar_url = $this->avatar_url;
+
+                if ($this->upload($path))
+                {   
+                    if (isset($old_avatar_url))
+                        unlink(Yii::getAlias('@webroot') . '/'. $old_avatar_url);
+
+                    $this->avatar_url = $path;
+                }
+                else
+                    $this->addError('image_file', 'There was an error uploading your image.');
+            } 
+        }
+
+        return parent::save($runValidation, [ 
+            'owner_id',
+            'email',
+            'password',
+            'phone',
+            'avatar_url',
+            'created_at',
+            'updated_at',
+            'auth_key',
+        ]);
+    }
+
+    public function upload($path)
+    {
+        if ($this->validate('image_file')) {
+            return $this->imageFile->saveAs($path);
+        } else {
+            return false;
+        }
     }
 
     static public function findByEmail($email)

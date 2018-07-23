@@ -51,27 +51,12 @@ class UserController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'logout'],
+                        'actions' => ['logout'],
                         'roles' => ['@'],
                     ],
                 ],
             ]
         ];
-    }
-
-    /**
-     * Lists all User models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
     /**
@@ -93,14 +78,24 @@ class UserController extends Controller
      * @return mixed
      */
     public function actionSignup()
-    {
+    {   
+        $this->layout = 'simple';
+        
         $model = new User();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            if (Yii::$app->user->login($model)) 
-                return $this->redirect(['view', 'id' => $model->user_id]);
-            
-            return $this->redirect(['login']);
+        if ($model->load(Yii::$app->request->post()) ) {
+
+            if ($model->password != $model->password_confirm) 
+            {
+                $flag = false;
+                $model->addError('password_confirm', 'Xác nhận mật khẩu không trùng nhau.');
+            }
+            elseif ($model->save()) {
+                if (Yii::$app->user->login($model)) 
+                    return $this->redirect(['view', 'id' => $model->user_id]);
+                return $this->redirect(['login']);
+            }
+         
         }
         
         return $this->render('signup', [
@@ -119,7 +114,7 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
             return $this->redirect(['view', 'id' => $model->user_id]);
         }
 
@@ -146,12 +141,12 @@ class UserController extends Controller
             if (!Yii::$app->security->validatePassword($model->old_password, $password)) 
             {   
                 $flag = false;
-                $model->addError('old_password', 'Old password does not match.');
+                $model->addError('old_password', 'Mật khẩu cũ không khớp.');
             }
             if ($model->password != $model->password_confirm) 
             {
                 $flag = false;
-                $model->addError('password_confirm', 'Password confirm does not match.');
+                $model->addError('password_confirm', 'Xác nhận mật khẩu không trùng nhau.');
             }
             if ($flag) 
             {
@@ -170,26 +165,14 @@ class UserController extends Controller
     }
 
     /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
      * Logs in a user.
      *
      * @return mixed
      */
     public function actionLogin()
-    {
+    {   
+        $this->layout = 'simple';
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }

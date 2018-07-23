@@ -1,0 +1,14 @@
+<div class="col-md-4 p-b-30">
+		<div class="card"> 
+			{{ html.a('<img class="img-md-card" src="' ~ Utils.imgSrc(model.avatar_url) ~'"/>', 
+			{0: 'booking/view-pitch', 'pitch_id': model.pitch_id}
+			) |raw}}
+			<div class="card-img-overlay"> <span class="badge badge-pill badge-danger">{{model.district}}</span> </div>
+			<div class="card-body">
+				<div class="news-title">
+					<h2 class=" title-small"><a href="#">{{ model.name }}</a></h2>
+				</div>
+				<p class="card-text"><small class="text-time"><em>{{ model.address }}, {{model.district}}, {{model.city}}</em></small></p>
+			</div>
+		</div>
+</div>

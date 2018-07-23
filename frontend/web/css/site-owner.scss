@@ -1,0 +1,21 @@
+$nav-text-color: #659D32;
+$btn-background-color: #55AE3A	;
+$btn-color: #f5f5f5;
+$background-gray: #EBEBEB;
+$background-light-gray: #f5f5f5;
+
+$title-color: #488214;
+$backdrop-text: #659D32;
+$background-green: #488214;
+$section-font-size: 45px;
+$section-font-weight: 400;
+$bar-color: #488214;
+@import 'owner-layout';
+@import 'materialFullCalendar';
+@import 'footer';
+
+.skin-green .main-header {
+	.navbar, .logo, .logo:hover {
+    	background-color: $title-color;
+	}
+}

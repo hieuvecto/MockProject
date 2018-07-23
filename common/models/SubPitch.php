@@ -62,6 +62,7 @@ class SubPitch extends \yii\db\ActiveRecord
             [['currency'], 'string', 'max' => 3],
             [['pitch_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pitch::className(), 'targetAttribute' => ['pitch_id' => 'pitch_id']],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
+            ['start_time', 'validateTime'],
         ];
     }
 
@@ -87,13 +88,27 @@ class SubPitch extends \yii\db\ActiveRecord
         ];
     }
 
+    public function validateTime($attribute, $params, $validator)
+    {
+        $start_time = new \DateTime($this->$attribute);
+        $end_time = new \DateTime($this->end_time);
+
+        $hoursDiff = Booking::diffByHours($this->$attribute, $this->end_time);
+        if ($start_time > $end_time)
+            $validator->addError($this, $attribute, 'Start time must be lower than end time.');
+        elseif ($hoursDiff < 5.0) 
+        {
+            $validator->addError($this, $attribute, 'The difference between start time and end time must be highter than 5 hours.');
+            $validator->addError($this, 'end_time', 'The difference between start time and end time must be highter than 5 hours.');
+        }
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBookings($params)
+    public function getBookings($params = null)
     {   
-        Yii::info('In get bookings');
-        if (!isset($params))
+        if (!$params)
             return $this->hasMany(Booking::className(), ['sub_pitch_id' => 'sub_pitch_id']);
         return $this->hasMany(Booking::className(), ['sub_pitch_id' => 'sub_pitch_id',])
                     ->andFilterWhere($params);
@@ -165,5 +180,21 @@ class SubPitch extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+
+    public function getEvents()
+    {
+        $verifiedBookings = $this->getBookings(['is_verified' => 1])->all();
+        $array = [];
+        Yii::info($verifiedBookings, 'Debug get events');
+        foreach ($verifiedBookings as $booking) {
+            $array[] = [
+                'start' => $booking->book_day . 'T' . $booking->start_time,
+                'end' => $booking->book_day . 'T' . $booking->end_time,
+                'color' => '#488214',
+            ];
+        }
+
+        return $array;
     }
 }

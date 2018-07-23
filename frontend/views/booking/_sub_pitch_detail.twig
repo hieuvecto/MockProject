@@ -1,0 +1,28 @@
+<div class="backdrop  {{ class ? class : '' }}">
+
+    <div class="backdrop-img" style="background-image: url({{Utils.imgSrc(subPitch.avatar_url)}});">
+        <div class="overlay"></div>
+    </div>
+    <div class="backdrop-content">
+        <hgroup>
+            <h1 class="not-mobile">{{ html.a(subPitch.name, 
+                {0: 'sub-pitch/view', 'id': subPitch.sub_pitch_id }, 
+                {'class': 'pure-a'})|raw}} 
+            </h1>  
+            <h2 class="for-mobile">{{ html.a(subPitch.name, 
+                {0: 'sub-pitch/view', 'id': subPitch.sub_pitch_id }, 
+                {'class': 'pure-a'})|raw}} 
+            </h2>   
+
+            <h4><i class="fa fa-map-marker" aria-hidden="true"></i>{{pitch.address}}, quận {{pitch.district}}, TP {{pitch.city}}</h4>
+            <h4><i class="fa fa-phone" aria-hidden="true"></i>{{pitch.phone_number}}</h4>
+            <h4><i class="fa fa-clock-o" aria-hidden="true"></i>{{subPitch.start_time|date('H:i')}} - {{subPitch.end_time|date('H:i')}}</h4>
+            <h4><i class="fa fa-info-circle" aria-hidden="true"></i>{{subPitch.size}} người</h4>
+            <h4><i class="fa fa-usd" aria-hidden="true"></i>{{subPitch.price_per_hour|number_format(0, '.', ',')}} {{subPitch.currency}} / 1 giờ</h4>
+            {% if isFullCalendar %}
+                <Button type="button" class="btn-modal btn btn-hero btn-md" data-id="{{subPitch.sub_pitch_id}}">Giờ trống sân</Button>
+            {% endif %}
+        </hgroup>
+    </div>
+
+</div>

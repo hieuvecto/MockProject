@@ -1,0 +1,56 @@
+.backdrop {
+	position: relative;
+    width: 100%;
+    height: 70vh;
+
+    h1 {
+    	font-size: 4.66rem;
+    }
+
+    h4 {
+        font-size: 1.53rem;
+    }
+
+    .backdrop-img {
+    	height: 70vh;
+	    background-size: cover;
+	    background-position: center center;
+	    background-repeat: no-repeat;
+    }
+
+    .backdrop-content {
+    	position: absolute;
+	    bottom: -10%;
+	    left: 35%;
+	    z-index: 3;
+	    color: #fff;
+	    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.75);
+	    -webkit-transform: translate3d(-50%, -50%, 0);
+	    -moz-transform: translate3d(-50%, -50%, 0);
+	    -ms-transform: translate3d(-50%, -50%, 0);
+	    -o-transform: translate3d(-50%, -50%, 0);
+	    transform: translate3d(-50%, -50%, 0);
+    }
+
+    .fa {
+    	margin-right: 10px;
+    	width: 20px;
+    }
+
+}
+
+@media (max-width: 800px) {
+    .backdrop {
+        .backdrop-content {
+            left: 40%;
+            bottom: -20%;    
+        }
+    }
+
+    .backdrop-booking {
+   
+        .backdrop-img {
+          
+        }
+    }
+}

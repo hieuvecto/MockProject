@@ -54,8 +54,13 @@ class BookingController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['pitches', 'dashboard', 'view-pitch'],
+                        'actions' => ['dashboard'],
                         'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['pitches', 'view-pitch'],
+                        'roles' => ['?', '@'],
                     ],
                 ],
             ]
@@ -67,7 +72,8 @@ class BookingController extends Controller
      * @return mixed
      */
     public function actionPitches()
-    {
+    {   
+
         $searchModel = new PitchSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination = [
@@ -77,6 +83,7 @@ class BookingController extends Controller
         return $this->render('pitches', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'keyword' => $searchModel->keyword,
         ]);
     }
 
@@ -107,17 +114,19 @@ class BookingController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionViewPitch($pitch_id)
-    {
+    {       
+        $this->layout = 'has-map-calendar';
+        
         $pitch = $this->findPitchModel($pitch_id);
         $subPitches = $pitch->getSubPitches()->all();
 
         if (count($subPitches) > 1) 
-            return $this->render('view-pitch-multiple', [
+            return $this->render('view-pitch-multiple.twig', [
                 'pitch' => $pitch,
                 'subPitches' => $subPitches
             ]);
 
-        return $this->render('view-pitch', [
+        return $this->render('view-pitch.twig', [
             'pitch' => $pitch,
             'subPitch' => $subPitches[0],
         ]);
@@ -136,7 +145,7 @@ class BookingController extends Controller
         $subPitch = $this->findSubPitchModel($model->sub_pitch_id);
         $pitch = $subPitch->getPitch()->one();
 
-        return $this->render('view', [
+        return $this->render('view.twig', [
             'model' => $model,
             'user' => $user,
             'pitch' => $pitch,
@@ -151,21 +160,23 @@ class BookingController extends Controller
      */
     public function actionCreate($sub_pitch_id)
     {   
+        $this->layout = 'has-fullcalendar';
+
         $subPitch = $this->findSubPitchModel($sub_pitch_id);
+        $pitch = $subPitch->getPitch()->one();
         $model = new Booking();
         $model->sub_pitch_id = $sub_pitch_id;
         $model->user_id = Yii::$app->user->identity->user_id;
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->total_price = Booking::subtractTime($model->end_time, $model->start_time) * $subPitch->price_per_hour;
-            $model->validateTime($subPitch);
             if ($model->save())
                 return $this->redirect(['view', 'id' => $model->booking_id]);
         }
 
         return $this->render('create', [
             'model' => $model,
-            'subPitch' => $subPitch 
+            'subPitch' => $subPitch,
+            'pitch' => $pitch,
         ]);
     }
 
@@ -182,11 +193,9 @@ class BookingController extends Controller
         if ($model->is_verified) 
             throw new HttpException(403, 'This booking was verified by the pitch owner. So you can not do update or delete action.');
         $subPitch = $this->findSubPitchModel($model->sub_pitch_id);
+        $pitch = $subPitch->getPitch()->one();
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->total_price = Booking::subtractTime($model->end_time, $model->start_time) * $subPitch->price_per_hour;
-            $model->validateTime($subPitch);
-            Yii::info($model->hasErrors(), 'Has Errors');
             if ($model->save())
                 return $this->redirect(['view', 'id' => $model->booking_id]);
         }
@@ -194,6 +203,7 @@ class BookingController extends Controller
         return $this->render('update', [
             'model' => $model,
             'subPitch' => $subPitch,
+            'pitch' => $pitch,
         ]);
     }
 
@@ -212,7 +222,7 @@ class BookingController extends Controller
 
         $model->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['dashboard']);
     }
 
     /**

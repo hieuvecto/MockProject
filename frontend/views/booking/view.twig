@@ -1,0 +1,80 @@
+{{ use('/yii/widgets/DetailView') }}
+{{ set(this, 'title', 'Chi tiết đặt sân') }}
+
+<div class="container m-t-80 list-rps">
+    <div class="row">
+        <div class="col-md-4">
+            <h1 class="title">{{this.title|e}}</h1>
+
+            <p> 
+                {% if not model.is_verified %}
+                {{ html.a('Cập nhật', {0: 'update', 'id': model.booking_id}, {'class': 'btn btn-hero btn-md'}) |raw}}
+                {{ html.a('Xóa', {0: 'delete', 'id': model.booking_id}, {
+                    'class': 'btn btn-danger btn-md',
+                    'data': {
+                        'confirm': 'Bạn có chắc muốn xóa đặt sân này??',
+                        'method': 'post',
+                    },
+                })|raw }}
+                {% endif %}
+            </p>
+
+            {{ detail_view_widget({
+		        'model': model,
+		        'attributes': [
+		        	{
+                        'label': 'Người đặt sân',
+                        'value': user.email,
+                    },
+                    {
+                        'label': 'Ngày đặt sân',
+                        'attribute': 'book_day'
+                    },
+                    {
+                        'label': 'Thời gian bắt đầu',
+                        'attribute': 'start_time'
+                    },
+                    {
+                        'label': 'Thời gian kết thúc',
+                        'attribute': 'end_time'
+                    },
+                    {
+                        'label': 'Tin nhắn',
+                        'attribute': 'message',
+                        'format': 'ntext',
+                    },
+                    {
+                        'label': 'Xác nhận?',
+                        'format': 'raw',
+                        'value': model.is_verified ? 
+                        '<i class="fa fa-check color-success" aria-hidden="true"></i>'|raw : 
+                        '<i class="fa fa-times color-danger" aria-hidden="true"></i>'|raw
+                    },
+                    {
+                        'label': 'Thành tiền',
+                        'value': model.total_price|number_format(0, '.', ',') ~ ' ' ~ subPitch.currency
+                    },
+                    {
+                        'label': 'Tạo lúc',
+                        'attribute': 'created_at',
+                        'format': ['datetime', 'php:Y-m-d h:i:s'], 
+                    },
+                    {
+                        'label': 'Lần cuối cập nhật',
+                        'attribute': 'updated_at',
+                        'format': ['datetime', 'php:Y-m-d h:i:s'],
+                    },
+		        ],
+		    }) }}
+        </div>
+
+        <div class="col-md-8">
+        	{% include '_sub_pitch_detail.twig' with {
+        		'subPitch': subPitch,
+        		'pitch': pitch,
+        		'isFullCalendar': false,
+                'class': 'backdrop-booking',
+        	}%}
+        </div>
+    </div>
+</div>

@@ -28,6 +28,7 @@ class SubPitchController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
                     'verify' => ['POST'],
+                    'get-events' => ['GET'],
                 ],
             ],
             'access' => [
@@ -56,6 +57,11 @@ class SubPitchController extends Controller
                             return false;
                         }
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['get-events', 'view'],
+                        'roles' => ['?', '@'],
+                    ],
                 ],
             ]
         ];
@@ -69,7 +75,9 @@ class SubPitchController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
-    {
+    {   
+        $this->layout = 'owner';
+        
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
@@ -177,6 +185,20 @@ class SubPitchController extends Controller
         return $this->redirect(['view-booking', 'booking_id' => $booking_id]); 
     }
 
+    public function actionGetEvents($id)
+    {   
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $subPitch = $this->findModel($id);
+        return $subPitch->getEvents();
+    }
+
+    public function actionView($id)
+    {
+        $pitch = $this->findModel($id)->getPitch()->one();
+
+        $this->redirect(['booking/view-pitch', 'pitch_id' => $pitch->pitch_id]);
+    }
     /**
      * Finds the SubPitch model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

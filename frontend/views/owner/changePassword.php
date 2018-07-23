@@ -2,34 +2,45 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\helpers\Utils;
+
 /* @var $this yii\web\View */
-/* @var $model common\models\Owner */
+/* @var $model common\models\User */
 
-$this->title = 'Change password: ' . $model->email;
-$this->params['breadcrumbs'][] = ['label' => 'Owners', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->owner_id, 'url' => ['view', 'id' => $model->owner_id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Đổi mật khẩu';
 ?>
-<div class="owner-update">
+<div class="container">
+    <h1 class="title"><?= Html::encode($this->title) ?></h1>
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card">
+                <?= Utils::catchIdentityImg(Utils::imgSrc($model->avatar_url), [
+                'class' => 'img-fluid',
+                'id' => 'fileInput-preview'
+            ]) ?>
+            </div>
+        </div>
+        <div class="col-md-5 custom-box p-tb-15 ">
+            <h2 class="title text-center"><?= Html::encode($this->title) ?></h2>
+		    <h2 class="title text-center m-b-20"><?= $model->email ?></h2>
+			<?php $form = ActiveForm::begin(); ?>
 
-    <div class="owner-form">
+		    <?= $form->field($model, 'old_password')->passwordInput()->label('Mật khẩu cũ') ?>
 
-	    <?php $form = ActiveForm::begin(); ?>
+		    <?= $form->field($model, 'password')->passwordInput()->label('Mật khẩu mới') ?>
 
-	    <?= $form->field($model, 'old_password')->passwordInput() ?>
+		    <?= $form->field($model, 'password_confirm')->passwordInput()->label('Xác nhận mật khẩu') ?>
 
-	    <?= $form->field($model, 'password')->passwordInput() ?>
+		    <div class="form-group m-t-30">
+                <div class="wrap-login101-form-btn">
+                    <div class="login101-form-bgbtn"></div>
+                    <button type="submit" class="login101-form-btn">Lưu</button>                            
+                </div>
+            </div>
 
-	    <?= $form->field($model, 'password_confirm')->passwordInput() ?>
-
-	    <div class="form-group">
-	        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-	    </div>
-
-	    <?php ActiveForm::end(); ?>
-
-	</div>
+		    <?php ActiveForm::end(); ?>	
+        </div>
+    </div>
 
 </div>

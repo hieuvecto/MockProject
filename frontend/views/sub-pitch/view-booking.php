@@ -56,8 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'city',
             'district',
-            'street',
-            'apartment_number',
+            'address',
             'phone_number',
         ],
     ]) ?>

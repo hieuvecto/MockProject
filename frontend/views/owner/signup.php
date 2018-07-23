@@ -10,26 +10,91 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Signup';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-signup">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to signup:</p>
+<div class="background-fluid">
+    
+    
+    <div class="pitch-background" style="position: relative;">
+        <!-- Overlay -->
+        <div class="overlay"></div>
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
+        <div class="top-overlay">
+            <div class="container-login100">
+                <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+                    <?php $form = ActiveForm::begin(['id' => 'signup-form',
+                    'options' => [
+                            'class' => 'login100-form validate-form'
+                    ]]); ?>
+                        <span class="login100-form-title p-b-49">
+                            Đăng Ký
+                        </span>
 
-                <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
+                        <div class="wrap-input100 validate-input m-b-23" data-validate="Username is required">
+                            <span class="label-input100">Email</span>
+                            <?= $form->field($model, 'email')->textInput(['autofocus' => true, 'class' => 'input100'])->label(false) ?>
+                        </div>
 
-                <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
+                        <div class="wrap-input100 validate-input m-b-23" data-validate="Phone is required">
+                            <span class="label-input100">Số điện thoại</span>
+                            <?= $form->field($model, 'phone')->textInput([
+                                'type' => 'number',
+                                'maxlength' => true, 
+                                'class' => 'input100'])->label(false) ?>
+                        </div>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+                        <div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
+                            <span class="label-input100">Mật khẩu</span>
+                            <?= $form->field($model, 'password')->passwordInput([
+                            'class' => 'input100'])->label(false) ?>
+                        </div>
 
-                <div class="form-group">
-                    <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                        <div class="wrap-input100 validate-input" data-validate="Password is required">
+                            <span class="label-input100">Xác nhận mật khẩu</span>
+                            <?= $form->field($model, 'password_confirm')->passwordInput([
+                            'class' => 'input100'])->label(false) ?>
+                        </div>
+                        <div class="text-right p-t-8 p-b-31">
+                            <a href="#">
+                                Quên mật khẩu ?
+                            </a>
+                        </div>
+
+                        <div class="container-login100-form-btn">
+                            <div class="wrap-login100-form-btn">
+                                <div class="login100-form-bgbtn"></div>
+                                <?= Html::submitButton('Đăng Ký', [
+                                    'type' => 'submit',
+                                    'class' => 'login100-form-btn', 
+                                    'name' => 'login-button']) ?>
+                            </div>
+                        </div>
+
+                        <div class="txt1 text-center p-t-54 p-b-20">
+                            <span>
+                                Hoặc Đăng Ký Bằng
+                            </span>
+                        </div>
+
+                        <div class="flex-c-m">
+                            <a href="#" class="login100-social-item bg1">
+                                <i class="fa fa-facebook"></i>
+                            </a>
+
+                            <a href="#" class="login100-social-item bg2">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+
+                            <a href="#" class="login100-social-item bg3">
+                                <i class="fa fa-google"></i>
+                            </a>
+                        </div>
+
+                    <?php ActiveForm::end(); ?>
                 </div>
-
-            <?php ActiveForm::end(); ?>
+            </div>   
         </div>
+        
+        
     </div>
+
 </div>
