@@ -7,6 +7,7 @@ use common\models\SubPitch;
 use common\models\SubPitchSearch;
 use common\models\Booking;
 use common\models\BookingSearch;
+use common\helpers\Utils;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,7 +38,7 @@ class SubPitchController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['update', 'delete', 'list-booking'],
+                        'actions' => ['update', 'delete', 'list-booking', 'statistic', 'week-revenue'],
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
                             if ($this->isAuthor()) {
@@ -116,20 +117,20 @@ class SubPitchController extends Controller
      * Lists all Booking models.
      * @return mixed
      */
-    public function actionListBooking($id, $is_verified = 0)
+    public function actionListBooking($id)
     {   
+        $this->layout = 'owner';
+        
         $subPitch = $this->findModel($id);
         $searchModel = new BookingSearch();
         $params = Yii::$app->request->queryParams;
         $params['BookingSearch']['sub_pitch_id'] = $id;
-        $params['BookingSearch']['is_verified'] = $is_verified;
         $dataProvider = $searchModel->search($params);
         $dataProvider->pagination = [
             'pageSize' => 10,
         ];
 
         return $this->render('list-booking', [
-            'is_verified' => $is_verified,
             'subPitch' => $subPitch,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -144,15 +145,25 @@ class SubPitchController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionViewBooking($booking_id)
-    {
+    {   
+        $this->layout = 'owner-map-calendar';
+
         $model = $this->findBookingModel($booking_id);
 
         $user = $model->getUser()->one();
         $subPitch = $this->findModel($model->sub_pitch_id);
         $pitch = $subPitch->getPitch()->one();
+        $count = $pitch->getSubPitches()->count();
+
+        if ($count > 1)
+            return $this->render('view-booking-multiple', [
+                'model' => $model,
+                'user' => $user,
+                'pitch' => $pitch,
+                'subPitch' => $subPitch,
+            ]);
 
         return $this->render('view-booking', [
-            'is_verified' => $model->is_verified,
             'model' => $model,
             'user' => $user,
             'pitch' => $pitch,
@@ -176,12 +187,16 @@ class SubPitchController extends Controller
 
         $model->is_verified = '1';
         if (!$model->save())
+        {   
+            Yii::info($model->getErrors(), 'Get Errors');
             Yii::$app->session->setFlash('error', 
-                'There was an error verifying this booking.');
+                'Đã có lỗi khi xác nhận đặt sân này: ' . 
+                Utils::arrrayToStrError($model->getErrors()) );
+        }
         else
             Yii::$app->session->setFlash('success', 
-                'Verify successfully.');
-        Yii::info($model->getErrors(), 'Get Errors');
+                'Xác nhận đặt sân thành công.');
+
         return $this->redirect(['view-booking', 'booking_id' => $booking_id]); 
     }
 
@@ -198,6 +213,28 @@ class SubPitchController extends Controller
         $pitch = $this->findModel($id)->getPitch()->one();
 
         $this->redirect(['booking/view-pitch', 'pitch_id' => $pitch->pitch_id]);
+    }
+
+    public function actionStatistic($id)
+    {   
+        $this->layout = 'owner';
+
+        $subPitch = $this->findModel($id);
+        $bookings_total = $subPitch->getBookings()->count();
+        $unverified_bookings = $subPitch->getBookings(['is_verified' => 0])->count();
+
+        return $this->render('statistic', [
+            'subPitch' => $subPitch,
+            'bookings_total' => $bookings_total,
+            'unverified_bookings' => $unverified_bookings,
+        ]);
+    }
+
+    public function actionWeekRevenue($id)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        return SubPitch::weekRevenue($id);
     }
     /**
      * Finds the SubPitch model based on its primary key value.

@@ -3,67 +3,185 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use common\helpers\Utils;
+use janisto\timepicker\TimePicker;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\PitchSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = $is_verified ? 'List Verified Bookings: ' : 'List Unverified Bookings: ';
-$this->title = $this->title . ' ' . $subPitch->name;
+$this->title = 'Danh sách đặt sân của' . ' ' . $subPitch->name;
 $this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="booking-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <?php Pjax::begin(); ?>
+$this->registerJS('
+$(".input-group-addon").on("click", function() {
+    var input = $(this).next();
+
+    if (input.val().trim() !== "") {
+        console.log("OK");
+        input.val("");
+        input.trigger("change");
+        var e = $.Event("keydown");
+        e.which = 13;
+        input.trigger(e);
+    }
+    
+});
+
+$(document).on("pjax:success", function() {
+    var addon = $(".input-group-addon");
+    addon.off("click");
+    addon.on("click", function() {
+        var input = $(this).next();
+
+        if (input.val().trim() !== "") {
+            console.log("OK");
+            input.val("");
+            input.trigger("change");
+            var e = $.Event("keydown");
+            e.which = 13;
+            input.trigger(e);
+        }
+    });
+
+    $("#dashboard-grid-reset").click(function()
+    {   
+        console.log("Test");
+        var id="list-booking-grid";
+        var inputSelector="#"+id+ " .filters input, "+"#"+id+" .filters select";
+        $(inputSelector).each( function(i,o) {
+            $(o).val("");
+            $(o).trigger("change");
+        });
+        
+        var e = $.Event("keydown");
+        e.which = 13;
+        $($(inputSelector)[0]).trigger(e);
+    });
+});
+
+$("#dashboard-grid-reset").click(function()
+{   
+    console.log("Test");
+    var id="list-booking-grid";
+    var inputSelector="#"+id+ " .filters input, "+"#"+id+" .filters select";
+    $(inputSelector).each( function(i,o) {
+        $(o).val("");
+        $(o).trigger("change");
+    });
+    
+    var e = $.Event("keydown");
+    e.which = 13;
+    $($(inputSelector)[0]).trigger(e);
+});
+
+');
+
+?>
+<div class="container">
+
+    <h1 class="title"><?= Html::encode($this->title) ?></h1>
+
+    <?php Pjax::begin([
+        'options' => [
+            'class' => 'table-responsive box table-box',
+        ]]); ?>
         <?= GridView::widget([
+            'id' => 'list-booking-grid',
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-                'book_day',
-                'start_time',
-                'end_time',
                 [
-                    'attribute' => 'message',
-                    'value' => function($dataProvider) {
-                        return substr($dataProvider->message, 0, 20) . '...';
-                    }
+                    'label' => 'Ngày đặt sân',
+                    'attribute' => 'book_day',
+                    'filter' => TimePicker::widget([
+                        //'language' => 'fi',
+                        'name' => "BookingSearch[book_day]",
+                        'value' => $searchModel->book_day,
+                        'mode' => 'date',
+                        'addon' => $searchModel->book_day ? 
+                        '<i class="fa fa-times" aria-hidden="true"></i>':
+                        '<i class="glyphicon glyphicon-calendar"></i>',
+                        'clientOptions' => [
+                            'dateFormat' => 'yy-mm-dd',
+                        ]
+                    ]),
+                    'headerOptions' => ['style' => 'width:15%'],
                 ],
                 [
+                    'label' => 'Bắt đầu lúc',
+                    'attribute' => 'start_time',
+                    'format' => ['time', 'php:H:i'],
+                    'filter' => Utils::getTimeArray(),
+                    'headerOptions' => ['style' => 'width:10%'],
+                ],
+                [
+                    'label' => 'Kết thúc lúc',
+                    'attribute' => 'end_time',
+                    'format' => ['time', 'php:H:i'],
+                    'filter' => Utils::getTimeArray(),
+                    'headerOptions' => ['style' => 'width:10%'],
+                ],
+                [   
+                    'label' => 'Xác nhận?',
                     'attribute' => 'is_verified',
+                    'format' => 'raw',
                     'value' => function($data) 
                     {
-                        return $data->is_verified ? 'Yes' : 'No';
+                        return $data->is_verified ? 
+                        '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
+                        '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
+                    },
+                    'filter' => [
+                            0 => 'No',
+                            1 => 'Yes',
+                        ]
+                ],
+                [
+                    'label' => 'Thành tiền',
+                    'attribute' => 'total_price',
+                    'value' => function($data)
+                    {
+                        return number_format($data->total_price, 0, '.', ',') . ' VND';
                     }
                 ],
-                'total_price',
-                'created_at:datetime',
-                'updated_at:datetime',
+                [
+                    'label' => 'Tạo lúc',
+                    'attribute' => 'created_at',
+                    'format' => ['datetime', 'php:Y-m-d H:i:s'],
+                    'filter' => '',
+                ],
+                [
+                    'label' => 'Lần cuối cập nhật',
+                    'attribute' => 'updated_at',
+                    'format' => ['datetime', 'php:Y-m-d H:i:s'],
+                    'filter' => '',
+                ],
                 [
                         'format'=>'raw',
-                        'value' => $is_verified ? 
-                        function($data)
-                        {   
-                            return Html::a('View', 
-                                [
-                                    'view-booking', 
-                                    'booking_id' => $data->booking_id
-                                ], 
-                                ['class' => 'btn btn-primary']);
-                        } :
-                        function($data)
-                        {   
+                        'value' => function($data) 
+                        {
+                            if ($data->is_verified)
+                                return Html::a('View', 
+                                    [
+                                        'view-booking', 
+                                        'booking_id' => $data->booking_id
+                                    ], 
+                                    ['class' => 'btn btn-hero btn-sm']);
                             return Html::a('Verify', 
                                 [
                                     'view-booking', 
                                     'booking_id' => $data->booking_id
                                 ], 
-                                ['class' => 'btn btn-primary']);
-                        },
+                                ['class' => 'btn btn-hero btn-sm']);
+                        }
+            
                 ],
             ],
         ]); ?>
     <?php Pjax::end(); ?>
 </div>
+
+                
+  

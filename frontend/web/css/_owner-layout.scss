@@ -287,6 +287,14 @@ a {
   width: 70%;
 }
 
+.color-danger {
+  color: #d9534f;
+}
+
+.color-success {
+  color: $btn-background-color;
+}
+
 @media (min-width: 1400px) {
 
   html, body {

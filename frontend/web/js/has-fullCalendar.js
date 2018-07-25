@@ -62,5 +62,5 @@ $('#myModal').on('shown.bs.modal', function (e) {
 	calendar.fullCalendar('render');
 	calendar.fullCalendar('removeEventSources');
 	calendar.fullCalendar('addEventSource', 
-		"/index.php?r=sub-pitch%2Fget-events&id=" + sub_pitch_id);
+		"/sub-pitch/get-events?id=" + sub_pitch_id);
 });

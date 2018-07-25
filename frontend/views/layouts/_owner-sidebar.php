@@ -33,7 +33,7 @@ $owner = \Yii::$app->owner->identity;
           <i class="fa fa-dashboard"></i> <span>Bảng điều khiển</span>
         </a>
       </li>
-      <li class="treeview <?= Utils::isController('pitch') ?>">
+      <li class="treeview <?= Utils::isController('pitch') ?> <?= Utils::isController('sub-pitch') ?>">
         <a href="#">
           <i class="fa fa-futbol-o"></i> <span>Quản lý sân</span>
           <span class="pull-right-container">
@@ -53,7 +53,8 @@ $owner = \Yii::$app->owner->identity;
           </li>
         </ul>
       </li>
-      <li class="treeview <?= Utils::isController('owner') ?>">
+
+      <li class="treeview <?= Utils::isController('owner', 'owner/dashboard') ?>">
         <a href="#">
           <i class="fa fa-user"></i> <span>Quản lý tài khoản</span>
           <span class="pull-right-container">

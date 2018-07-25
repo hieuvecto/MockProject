@@ -66,7 +66,7 @@ $owner = \Yii::$app->owner->identity;
 
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <?= Html::a('Đăng ký sân', ['site/welcome-owner'],
+                    <?= Html::a('Đăng ký sân', ['owner/dashboard'],
                         ['class' => 'navbar-a'] ) ?>
                 </li>
                 <?php if (isset($user)):?>

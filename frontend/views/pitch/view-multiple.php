@@ -122,38 +122,19 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
         <div class="col-md-5 custom-box p-tb-15">
-            <div class="row not-mobile">
-                <div class="col-xs-4">
+            <div class="row">
+                <div class="col-xs-5 col-md-4">
                     <?= Html::a('Cập nhật', ['sub-pitch/update', 'id' => $model->sub_pitch_id], ['class' => 'btn btn-hero btn-md btn-fluid']) ?>
                 </div>
-                <div class="col-xs-4"">
+                <div class="col-xs-5 col-md-4 float-right">
                     <Button type="button" class="btn-modal btn btn-hero btn-md btn-fluid" data-id="<?= $model->sub_pitch_id ?>">Giờ trống sân</Button>
                 </div>
-                <div class="col-xs-4">
-                    <?= Html::a('Xóa', ['sub-pitch/delete', 'id' => $model->sub_pitch_id], [
-                        'class' => 'btn btn-danger btn-md btn-fluid',
-                        'data' => [
-                            'confirm' => 'Are you sure you want to delete this item?',
-                            'method' => 'post',
-                        ],
-                    ]) ?>
-                </div>
-            </div>
-            <div class="for-mobile">
-                <?= Html::a('Cập nhật', ['sub-pitch/update', 'id' => $model->sub_pitch_id], ['class' => 'btn btn-hero btn-md']) ?>
-                <Button type="button" class="btn-modal btn btn-hero btn-md" data-id="<?= $model->sub_pitch_id ?>">Giờ trống sân</Button>
-                <?= Html::a('Xóa', ['sub-pitch/delete', 'id' => $model->sub_pitch_id], [
-                        'class' => 'btn btn-danger btn-md',
-                        'data' => [
-                            'confirm' => 'Are you sure you want to delete this item?',
-                            'method' => 'post',
-                        ],
-                    ]) ?>
             </div>
             <div>
                 <div class="float-right">
                     Sân có <?= $model->getBookings(['is_verified' => 0])->count() ?> đặt sân chưa xác nhận. 
-                    <?= Html::a('Xác nhận', ['sub-pitch/list-booking', 'id' => $model->sub_pitch_id], ['class' => 'btn btn-hero btn-md ']) ?>
+                    <?= Html::a('Xác nhận', ['sub-pitch/list-booking', 'id' => $model->sub_pitch_id, 
+                    'BookingSearch' => [ 'is_verified' => 0]], ['class' => 'btn btn-hero btn-sm ']) ?>
                 </div>
             </div>
             <?= DetailView::widget([
@@ -205,6 +186,26 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
             ]) ?>
+
+            <div class="row">
+                <div class="col-xs-4">
+                    <?= Html::a('Thống kê', 
+                                [
+                                    'sub-pitch/statistic', 
+                                    'id' => $model->sub_pitch_id
+                                ], 
+                                ['class' => 'btn btn-hero btn-md btn-fluid']) ?>
+                </div>
+                <div class="col-xs-4 float-right">
+                    <?= Html::a('Xóa', ['sub-pitch/delete', 'id' => $model->sub_pitch_id], [
+                        'class' => 'btn btn-danger btn-md btn-fluid',
+                        'data' => [
+                            'confirm' => 'Are you sure you want to delete this item?',
+                            'method' => 'post',
+                        ],
+                    ]) ?>
+                </div>
+            </div>
 
             <div class="card for-mobile">
                 <?= Utils::catchImg(Utils::imgSrc($model->avatar_url), [

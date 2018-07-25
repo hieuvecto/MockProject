@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use common\models\Booking;
+use common\helpers\Utils;
 use yii\web\UploadedFile;
 
 /**
@@ -186,7 +187,7 @@ class SubPitch extends \yii\db\ActiveRecord
     {
         $verifiedBookings = $this->getBookings(['is_verified' => 1])->all();
         $array = [];
-        Yii::info($verifiedBookings, 'Debug get events');
+
         foreach ($verifiedBookings as $booking) {
             $array[] = [
                 'start' => $booking->book_day . 'T' . $booking->start_time,
@@ -194,7 +195,35 @@ class SubPitch extends \yii\db\ActiveRecord
                 'color' => '#488214',
             ];
         }
-
+        Yii::info($array, 'Debug get events');
         return $array;
+    }
+
+    static public function weekRevenue($sub_pitch_id)
+    {   
+        $week = Utils::getWeekLabels('Y-m-d', false);
+        $result = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+        
+        $connection = Yii::$app->getDb();
+        
+        foreach ($week as $key => $day) {
+            $command = $connection->createCommand( "
+                SELECT `total_price` FROM `Booking` WHERE 
+                    (`sub_pitch_id`=$sub_pitch_id)
+                AND (`book_day` = CAST('$day' AS date))
+                AND (`is_verified`= 1)
+                ");
+
+            $rs = $command->queryAll();
+
+            foreach ($rs as $total_price_row) {
+                $total_price = $total_price_row['total_price'];
+                $result[$key] += (float) $total_price;
+            }
+
+        }
+       
+        return $result;
+
     }
 }

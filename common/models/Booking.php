@@ -102,7 +102,8 @@ class Booking extends \yii\db\ActiveRecord
             throw new NotFoundHttpException('The requested sub pitch does not exist.');
 
         $start_time = new \DateTime($this->start_time);
-        $this->end_time = Booking::computeEndTime($this->start_time, $this->book_range);
+        if (isset($this->book_range))
+            $this->end_time = Booking::computeEndTime($this->start_time, $this->book_range);
         $end_time = new \DateTime($this->end_time);
 
         $pitch_start_time = new \DateTime($subPitch->start_time);
@@ -115,12 +116,14 @@ class Booking extends \yii\db\ActiveRecord
 
         $escape_start_time = addslashes($this->start_time);
         $escape_end_time = addslashes($this->end_time);
+        $escape_book_day = addslashes($this->book_day);
 
         $queryStr = "
             SELECT * FROM `Booking` WHERE NOT (
             (`start_time` >= CAST('$escape_end_time' AS time)) OR 
             (`end_time` <= CAST('$escape_start_time' AS time))
         ) AND (`sub_pitch_id`=$subPitch->sub_pitch_id)
+          AND (`book_day` = CAST('$escape_book_day' AS date))
           AND (`is_verified`= 1)  ";
 
         if ($this->booking_id)

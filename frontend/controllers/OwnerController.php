@@ -54,12 +54,43 @@ class OwnerController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'dashboard', 'week-revenue', 'month-revenue'],
                         'roles' => ['@'],
                     ],
                 ],
             ]
         ];
+    }
+
+    /**
+     * Displays a single Owner model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDashboard()
+    {   
+        $owner = Yii::$app->owner->identity;
+        $pitches = $owner->getPitches()->all();
+
+        $count = 0;
+        $countUnverfied = 0;
+        foreach ($pitches as $pitch) {
+            $subPitches = $pitch->getSubPitches()->all();
+
+            foreach ($subPitches as $subPitch) 
+            {   
+                // count unverified bookings
+                $count += $subPitch->getBookings()->count();
+                $countUnverfied += $subPitch->getBookings(['is_verified' => 0])->count();
+            }
+        }
+
+        return $this->render('dashboard', [
+            'countPitches' => count($pitches),
+            'countTotal' => $count,
+            'countUnverified' => $countUnverfied,
+        ]);
     }
 
     /**
@@ -186,7 +217,7 @@ class OwnerController extends Controller
 
         $model = new LoginForm(Owner::className());
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect('dashboard');
         } else {
             $model->password = '';
 
@@ -208,6 +239,19 @@ class OwnerController extends Controller
         return $this->goHome();
     }
 
+    public function actionWeekRevenue()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        return Owner::weekRevenue();
+    }
+
+    public function actionMonthRevenue()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        return Owner::monthRevenue();
+    }
     /**
      * Finds the Owner model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

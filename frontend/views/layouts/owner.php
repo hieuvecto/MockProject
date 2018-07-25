@@ -33,6 +33,7 @@ AppOwnerAsset::register($this);
 	<?= $this->render('_owner-header') ?>
 	<?= $this->render('_owner-sidebar') ?>
 	<div class="content-wrapper">
+		<?= Alert::widget() ?>
 		<?= $content ?>
 	</div>
 	<?= $this->render('_owner-footer') ?>

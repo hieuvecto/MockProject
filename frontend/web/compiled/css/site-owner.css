@@ -237,6 +237,12 @@ a, a:hover, a:focus, a:active {
 .width-70 {
   width: 70%;
 }
+.color-danger {
+  color: #d9534f;
+}
+.color-success {
+  color: #55ae3a;
+}
 @media (min-width: 1400px) {
   html, body {
     font-size: 12px;

@@ -4,6 +4,9 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use common\helpers\Utils;
+use common\model\Booking;
+
 /**
  * This is the model class for table "Owner".
  *
@@ -217,5 +220,107 @@ class Owner extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function validatePassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    static public function weekRevenue()
+    {   
+        $week = Utils::getWeekLabels('Y-m-d', false);
+        $result = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+
+        $owner = Yii::$app->owner->identity;
+
+        $connection = Yii::$app->getDb();
+        $command = $connection->createCommand( "
+            SELECT `pitch_id` FROM `Pitch` WHERE 
+                (`owner_id`=$owner->owner_id)
+            ");
+
+        $rs = $command->queryAll();
+
+        foreach ($rs as $pitch_row) {
+            $pitch_id = $pitch_row['pitch_id'];
+            $command = $connection->createCommand( "
+                SELECT `sub_pitch_id` FROM `SubPitch` WHERE 
+                    (`pitch_id`=$pitch_id)
+                ");
+            $rs = $command->queryAll();
+
+            foreach ($rs as $sub_pitch_row) {
+                $sub_pitch_id = $sub_pitch_row['sub_pitch_id'];
+                Yii::info("tree 1");
+                foreach ($week as $key => $day) {
+                    $command = $connection->createCommand( "
+                        SELECT `total_price` FROM `Booking` WHERE 
+                            (`sub_pitch_id`=$sub_pitch_id)
+                        AND (`book_day` = CAST('$day' AS date))
+                        AND (`is_verified`= 1)
+                        ");
+                    Yii::info("tree 2");
+                    $rs = $command->queryAll();
+
+                    foreach ($rs as $total_price_row) {
+                        $total_price = $total_price_row['total_price'];
+                        $result[$key] += (float) $total_price;
+                    }
+
+                }
+            }
+        }
+       
+        return $result;
+
+    }
+
+    static public function monthRevenue()
+    {   
+        $months = Utils::getMonthLabels();
+        $result = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+
+        $owner = Yii::$app->owner->identity;
+
+        $connection = Yii::$app->getDb();
+        $command = $connection->createCommand( "
+            SELECT `pitch_id` FROM `Pitch` WHERE 
+                (`owner_id`=$owner->owner_id)
+            ");
+
+        $rs = $command->queryAll();
+
+        foreach ($rs as $pitch_row) {
+            $pitch_id = $pitch_row['pitch_id'];
+            $command = $connection->createCommand( "
+                SELECT `sub_pitch_id` FROM `SubPitch` WHERE 
+                    (`pitch_id`=$pitch_id)
+                ");
+            $rs = $command->queryAll();
+
+            foreach ($rs as $sub_pitch_row) {
+                $sub_pitch_id = $sub_pitch_row['sub_pitch_id'];
+            
+                foreach ($months as $key => $month) {
+                    $bot = $month . '-01';
+                    $top = $months[($key+1) % count($months)] . '-01';
+
+                    $command = $connection->createCommand( "
+                        SELECT `total_price` FROM `Booking` WHERE 
+                            (`sub_pitch_id`=$sub_pitch_id)
+                        AND (`book_day` >= CAST('$bot' AS date))
+                        AND (`book_day` < CAST('$top' AS date))
+                        AND (`is_verified`= 1)
+                        ");
+                 
+                    $rs = $command->queryAll();
+
+                    foreach ($rs as $total_price_row) {
+                        $total_price = $total_price_row['total_price'];
+                        $result[$key] += (float) $total_price;
+                    }
+
+                }
+            }
+        }
+       
+        return $result;
+
     }
 }

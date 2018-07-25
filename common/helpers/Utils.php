@@ -84,9 +84,10 @@ class Utils
 		return '';
 	}
 
-	static public function isController($controller_id) 
+	static public function isController($controller_id, $exceptUrl = '') 
 	{	
-		if (Yii::$app->controller->id === $controller_id)
+		if (Yii::$app->controller->id === $controller_id &&
+			Yii::$app->controller->getRoute() !== $exceptUrl)
 			return 'active';
 		return '';
 	}
@@ -117,5 +118,47 @@ class Utils
 		if (trim($src) === '' || trim($src) === '/')
 			$src = '/images/gravatar.png';
 		return Html::img($src, $options);
+	}
+
+	static public function arrrayToStrError($array)
+	{	
+		$error = '';
+		foreach ($array as $key => $value) {
+			foreach ($value as $keyVal => $valueVal) {
+				if (strpos($error, $valueVal) === false)
+					$error = $error  . $valueVal. ' ';
+			}
+		}
+		return $error;
+	}
+
+	static public function getWeekLabels($format = 'd/m', $has_day = true)
+	{
+		$days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+		$daysVN = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+		$result = [];
+
+		foreach ($days as $key => $value) {
+			if ($has_day)
+				$result[] = $daysVN[$key] . ' ' . date( $format, strtotime( $value .' this week' ));
+			else 
+				$result[] = date( $format, strtotime( $value .' this week' ));
+		}
+
+		return $result;
+	}
+
+	static public function getMonthLabels($format = 'Y')
+	{
+		$months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+		$this_year = date($format);
+
+		$result = [];
+
+		foreach ($months as $value) {
+			$result[] = $this_year . '-' . $value;
+		}
+
+		return $result;
 	}
 }

@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 
@@ -15,7 +16,7 @@ $(document).on("pjax:success", function() {
     $("#dashboard-grid-reset").click(function()
     {   
         console.log("Test");
-        var id="dashboard-grid";
+        var id="index-grid";
         var inputSelector="#"+id+ " .filters input, "+"#"+id+" .filters select";
         $(inputSelector).each( function(i,o) {
             $(o).val("");
@@ -140,6 +141,26 @@ $("#dashboard-grid-reset").click(function()
                     'class' => 'yii\grid\ActionColumn',
                     'header' => '<i id="dashboard-grid-reset" class="fa fa-refresh" aria-hidden="true"></i>',
                     'headerOptions' => ['style' => 'width:8%'],
+                    'template' => '{view} {update} {delete} {bookings}',
+                    'buttons'=>[
+                        'bookings'=>function ($url, $model) {
+                            $subPitches = $model->getSubPitches()->all();
+                            if (count($subPitches) > 1)
+                                return '<p style="font-size: 1rem;">'.count($subPitches) . ' sân con </p>'; 
+
+                            $link = Url::to(['/sub-pitch/list-booking', 'id' => $subPitches[0]->sub_pitch_id]);
+                            $link1 = Url::to(['/sub-pitch/statistic', 'id' => $subPitches[0]->sub_pitch_id]);
+
+                            return 
+                            '<a href="'.$link.'" title="Các đặt sân" aria-label="Các đặt sân" data-pjax="0">
+                                <i class="fa fa-envelope-o"></i>
+                            </a>'
+                            .
+                            '<a href="'.$link1.'" title="Thống kê" aria-label="Thống kê" data-pjax="0">
+                                <i class="fa fa-bar-chart"></i>
+                            </a>';
+                        },
+                    ],
                 ],
             ],
         ]); ?>

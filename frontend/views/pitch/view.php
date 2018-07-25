@@ -20,20 +20,14 @@ $this->title = $pitch->name;
                 <div class="col-xs-5">
                     <?= Html::a('Mở rộng sân', ['extend', 'id' => $pitch->pitch_id], ['class' => 'btn btn-hero btn-md btn-fluid']) ?>
                 </div>
-                <div class="col-xs-5">
-                    <Button type="button" class="btn-modal btn btn-hero btn-md btn-fluid" data-id="<?= $subPitch->sub_pitch_id ?>">Giờ trống sân</Button>
-                </div>
-                 <div class="col-xs-5">
-                    <?= Html::a('Xóa', ['delete', 'id' => $pitch->pitch_id], [
-                        'class' => 'btn btn-danger btn-md btn-fluid',
-                        'data' => [
-                            'confirm' => 'Are you sure you want to delete this item?',
-                            'method' => 'post',
-                        ],
-                    ]) ?>
+            </div>
+            <div>
+                <div class="float-right">
+                    Sân có <?= $subPitch->getBookings(['is_verified' => 0])->count() ?> đặt sân chưa xác nhận. 
+                    <?= Html::a('Xác nhận', ['sub-pitch/list-booking', 'id' => $subPitch->sub_pitch_id, 
+                    'BookingSearch' => [ 'is_verified' => 0]], ['class' => 'btn btn-hero btn-sm ']) ?>
                 </div>
             </div>
-
             <?= DetailView::widget([
                 'model' => $pitch,
                 'attributes' => [
@@ -115,6 +109,28 @@ $this->title = $pitch->name;
                     ],
                 ],
             ]) ?>
+            <div class="row">
+                <div class="col-xs-4">
+                    <Button type="button" class="btn-modal btn btn-hero btn-md btn-fluid" data-id="<?= $subPitch->sub_pitch_id ?>">Giờ trống sân</Button>
+                </div>
+                <div class="col-xs-4">
+                    <?= Html::a('Thống kê', 
+                                [
+                                    'sub-pitch/statistic', 
+                                    'id' => $subPitch->sub_pitch_id
+                                ], 
+                                ['class' => 'btn btn-hero btn-md btn-fluid']) ?>
+                </div>
+                 <div class="col-xs-4">
+                    <?= Html::a('Xóa', ['delete', 'id' => $pitch->pitch_id], [
+                        'class' => 'btn btn-danger btn-md btn-fluid',
+                        'data' => [
+                            'confirm' => 'Are you sure you want to delete this item?',
+                            'method' => 'post',
+                        ],
+                    ]) ?>
+                </div>
+            </div>
         </div>
         <div class="col-md-7">
             <div class="card">
