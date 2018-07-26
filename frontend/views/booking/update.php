@@ -2,7 +2,7 @@
 
 $this->title = 'Thay đổi đặt sân';
 ?>
-<div class="container m-t-80 list-rps">
+<div class="container list-rps">
     <?= $this->render('_form', [
         'model' => $model,
         'subPitch' => $subPitch,

@@ -4,3 +4,8 @@
 
 uploads/*
 !uploads/.gitkeep
+
+# ignore compiled css from sass converter
+
+/compiled
+compiled/

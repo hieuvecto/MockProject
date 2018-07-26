@@ -22,7 +22,7 @@ $this->registerJs(
 ); 
 ?>
 
-<div class="container horiz-searchform m-t-80 box">
+<div class="container horiz-searchform box">
     <?php Pjax::begin(['id' => 'pitch-filter',
         'options' => [
             'class' => 'row',

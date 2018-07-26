@@ -15,6 +15,21 @@ $this->title = 'Thông tin chủ sân';
     <p>
         <?= Html::a('Cập nhật', ['update', 'id' => $model->owner_id], ['class' => 'btn btn-hero btn-md']) ?>
         <?= Html::a('Đổi mật khẩu', ['change-password', 'id' => $model->owner_id], ['class' => 'btn btn-hero btn-md']) ?>
+        <?php if ($socials['facebook']['is_render']): ?>
+        <a href="/owner/auth?authclient=facebook" class="login100-social-item bg1 inline-flex" title="Facebook">
+            <i class="fa fa-facebook"></i>
+        </a>
+        <?php endif; ?>
+        <?php if ($socials['twitter']['is_render']): ?>
+        <a href="#" class="login100-social-item bg2 inline-flex">
+            <i class="fa fa-twitter"></i>
+        </a>
+        <?php endif; ?>
+        <?php if ($socials['google']['is_render']): ?>
+        <a href="/owner/auth?authclient=google" class="login100-social-item bg3 inline-flex">
+            <i class="fa fa-google"></i>
+        </a>
+        <?php endif; ?>
     </p>
 
     <div class="row">

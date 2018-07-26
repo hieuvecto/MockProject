@@ -1,11 +1,8 @@
 <?php
 use yii\helpers\Html;
-use frontend\assets\AppAsset;
 /* @var $this yii\web\View */
 
 $this->title = 'Tìm Sân Online | Tìm kiếm và đặt sân bóng Online';
-
-$this->registerJsFile('/js/has-top-backdrop.js', ['depends' => AppAsset::className()]);
 
 ?>
 

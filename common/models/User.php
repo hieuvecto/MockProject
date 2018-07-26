@@ -87,6 +87,17 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $this->hasMany(Booking::className(), ['user_id' => 'user_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuths($params = null)
+    {   
+        if (!$params)
+            return $this->hasMany(AuthUser::className(), ['user_id' => 'user_id']);
+        return $this->hasMany(AuthUser::className(), ['user_id' => 'user_id'])
+                    ->andFilterWhere($params);
+    }
+
     /** Deletes avatar before delete record.
      *
      * @return bool

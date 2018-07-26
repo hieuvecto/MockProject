@@ -9,7 +9,7 @@ use common\helpers\Utils;
 
 $this->title = 'Đổi mật khẩu';
 ?>
-<div class="container m-t-80 m-b-50">
+<div class="container m-b-50">
 
     <div class="row m-t-30">
     	<div class="col-md-4 m-lr-auto">

@@ -6,8 +6,11 @@ use Yii;
 use common\models\Owner;
 use common\models\OwnerSearch;
 use common\models\LoginForm;
+use common\components\AuthOwnerHandler;
+use common\components\AuthAction;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\HttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
@@ -57,9 +60,41 @@ class OwnerController extends Controller
                         'actions' => ['logout', 'dashboard', 'week-revenue', 'month-revenue'],
                         'roles' => ['@'],
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['auth'],                    
+                        'roles' => ['?', '@'],
+                    ],
                 ],
             ]
         ];
+    }
+
+    public function actions()
+    {
+        return [
+            'auth' => [
+                'class' => AuthAction::className(),
+                'returnUrl' => 'https://app-frontend.com/owner/auth?authclient=',
+                'successCallback' => [$this, 'onAuthSuccess'],
+            ],
+        ];
+    }
+
+    public function onAuthSuccess($client)
+    {
+        $pre_state = Yii::$app->owner->isGuest;
+        $result = (new AuthOwnerHandler($client))->handle();
+
+        if ($result)
+            if ($pre_state)
+                return $this->redirect('dashboard');
+            else
+                return $this->redirect(['view', 'id' => Yii::$app->owner->identity->owner_id]);
+        if (Yii::$app->owner->isGuest)
+            return $this->redirect('login');
+
+        return $this->redirect(['view', 'id' => Yii::$app->owner->identity->owner_id]);
     }
 
     /**
@@ -98,11 +133,24 @@ class OwnerController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-     */
+     */   
     public function actionView($id)
     {   
+        $model = $this->findModel($id);
+        $socials = [
+            'facebook' => [ 'source' => 'facebook', 'is_render' => true],
+            'twitter' => [ 'source' => 'twitter', 'is_render' => true],
+            'google' => [ 'source' => 'google', 'is_render' => true],
+        ];
+
+        foreach ($socials as $key => $social) {
+            if ($model->getAuths([ 'source' => $social['source'] ])->exists())
+                $socials[$key]['is_render'] = false;
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'socials' => $socials,
         ]);
     }
 

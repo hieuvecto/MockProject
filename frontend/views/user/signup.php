@@ -6,6 +6,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 $this->title = 'Signup';
 $this->params['breadcrumbs'][] = $this->title;
@@ -84,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <i class="fa fa-twitter"></i>
                             </a>
 
-                            <a href="#" class="login100-social-item bg3">
+                            <a href="<?= Url::to(['user/auth', 'authclient'=> 'google']) ?>" class="login100-social-item bg3">
                                 <i class="fa fa-google"></i>
                             </a>
                         </div>

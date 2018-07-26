@@ -9,7 +9,7 @@ use common\helpers\Utils;
 
 $this->title = 'Cập nhật Profile';
 ?>
-<div class="container m-t-80 list-rps">
+<div class="container list-rps">
 
     <div class="row ">
     	<div class="col-md-6 m-t-30">

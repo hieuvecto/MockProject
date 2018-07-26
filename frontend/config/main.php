@@ -51,7 +51,22 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'google' => [
+                    'class' => 'yii\authclient\clients\Google',
+                    'clientId' => '468410628024-lgu5oahg4emg9ecaaknbfgvtcncs0btu.apps.googleusercontent.com',
+                    'clientSecret' => 'P968h2QeFWvcZI042gU4hc9F',
+                ], 
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => '1964295070268677',
+                    'clientSecret' => '72001cdcb78dc4606ec2a1e80d5950b9',
+                ],
+                // etc.
+            ],
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,

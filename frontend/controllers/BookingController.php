@@ -160,7 +160,6 @@ class BookingController extends Controller
      */
     public function actionCreate($sub_pitch_id)
     {   
-        $this->layout = 'has-fullcalendar';
 
         $subPitch = $this->findSubPitchModel($sub_pitch_id);
         $pitch = $subPitch->getPitch()->one();

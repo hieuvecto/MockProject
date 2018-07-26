@@ -11,6 +11,7 @@ use frontend\assets\AppAsset;
 use common\widgets\Alert;
 
 AppAsset::register($this);
+$this->registerJsFile('/js/has-top-backdrop.js', ['depends' => AppAsset::className()]);
 ?>
 
 <?php $this->beginPage() ?>
@@ -31,10 +32,8 @@ AppAsset::register($this);
 
 <?= $this->render('_navbar-user') ?>
 
-<div class="m-t-80">
-	<?= Alert::widget() ?>
-	<?= $content ?>
-</div>
+<?= Alert::widget() ?>
+<?= $content ?>
 
 <?= $this->render('_footer') ?>
 

@@ -6,8 +6,12 @@ use Yii;
 use common\models\User;
 use common\models\UserSearch;
 use common\models\LoginForm;
+use common\helpers\Utils;
+use common\components\AuthUserHandler;
+use common\components\AuthAction;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\HttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
@@ -54,9 +58,42 @@ class UserController extends Controller
                         'actions' => ['logout'],
                         'roles' => ['@'],
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['auth'],                    
+                        'roles' => ['?', '@'],
+
+                    ],
                 ],
             ]
         ];
+    }
+
+    public function actions()
+    {
+        return [
+            'auth' => [
+                'class' => AuthAction::className(),
+                'returnUrl' => 'https://app-frontend.com/user/auth?authclient=',
+                'successCallback' => [$this, 'onAuthSuccess'],
+            ],
+        ];
+    }
+
+    public function onAuthSuccess($client)
+    {   
+        $pre_state = Yii::$app->user->isGuest;
+        $result = (new AuthUserHandler($client))->handle();
+
+        if ($result)
+            if ($pre_state)
+                return $this->goHome();
+            else
+                return $this->redirect(['view', 'id' => Yii::$app->user->identity->user_id]);
+        if (Yii::$app->user->isGuest)
+            return $this->redirect('login');
+
+        return $this->redirect(['view', 'id' => Yii::$app->user->identity->user_id]);
     }
 
     /**
@@ -66,9 +103,22 @@ class UserController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {
+    {   
+        $model = $this->findModel($id);
+        $socials = [
+            'facebook' => [ 'source' => 'facebook', 'is_render' => true],
+            'twitter' => [ 'source' => 'twitter', 'is_render' => true],
+            'google' => [ 'source' => 'google', 'is_render' => true],
+        ];
+
+        foreach ($socials as $key => $social) {
+            if ($model->getAuths([ 'source' => $social['source'] ])->exists())
+                $socials[$key]['is_render'] = false;
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'socials' => $socials,
         ]);
     }
 

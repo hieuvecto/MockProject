@@ -5,6 +5,7 @@
 /* @var $model \common\models\LoginForm */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Đăng Nhập';
@@ -63,7 +64,7 @@ $this->title = 'Đăng Nhập';
                         </div>
 
                         <div class="flex-c-m">
-                            <a href="#" class="login100-social-item bg1">
+                            <a href="" class="login100-social-item bg1 auth-link" title="Facebook" data-popup-width="860" data-popup-height="480">
                                 <i class="fa fa-facebook"></i>
                             </a>
 
@@ -71,7 +72,7 @@ $this->title = 'Đăng Nhập';
                                 <i class="fa fa-twitter"></i>
                             </a>
 
-                            <a href="#" class="login100-social-item bg3">
+                            <a href="<?= Url::to(['user/auth', 'authclient'=> 'google']) ?>" class="login100-social-item bg3">
                                 <i class="fa fa-google"></i>
                             </a>
                         </div>

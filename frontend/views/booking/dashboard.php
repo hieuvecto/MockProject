@@ -77,7 +77,7 @@ $("#dashboard-grid-reset").click(function()
 ');
 
 ?>
-<div class="container m-t-80 m-b-50">
+<div class="container">
 
     <h1 class="title"><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

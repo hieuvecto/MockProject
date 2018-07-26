@@ -19,6 +19,7 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "yiisoft/yii2-twig": "~2.2.0",
+        "yiisoft/yii2-authclient": "~2.1.0",
         "janisto/yii2-timepicker": "~1.1.0",
         "borales/yii2-phone-input": "~0.1.1",
         "nizsheanez/yii2-asset-converter": "~1.4.0"

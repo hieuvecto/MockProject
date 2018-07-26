@@ -161,4 +161,19 @@ class Utils
 
 		return $result;
 	}
+
+	static public function getFlashes()
+	{
+		$session = Yii::$app->session;
+        $flashes = $session->getAllFlashes();
+        $returnMesaage = '';
+        foreach ($flashes as $type => $flash) {
+            foreach ((array) $flash as $i => $message) {
+                $returnMesaage = $returnMesaage . $message . ' ';
+            }
+            $session->removeFlash($type);
+        }
+
+        return $returnMesaage;
+	}
 }
