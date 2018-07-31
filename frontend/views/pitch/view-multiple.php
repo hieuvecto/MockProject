@@ -17,34 +17,37 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-md-5 custom-box p-tb-15">
-            <div class="row not-mobile">
-                <div class="col-xs-4">
-                    <?= Html::a('Cập nhật', ['update', 'id' => $pitch->pitch_id], ['class' => 'btn btn-hero btn-md btn-fluid']) ?>
-                </div>
-                <div class="col-xs-4">
-                    <?= Html::a('Mở rộng sân', ['extend', 'id' => $pitch->pitch_id], ['class' => 'btn btn-hero btn-md btn-fluid']) ?>
-                </div>
-                <div class="col-xs-4">
-                    <?= Html::a('Xóa', ['delete', 'id' => $pitch->pitch_id], [
-                        'class' => 'btn btn-danger btn-md btn-fluid',
-                        'data' => [
-                            'confirm' => 'Are you sure you want to delete this item?',
-                            'method' => 'post',
-                        ],
-                    ]) ?>
-                </div>
-            </div>
+            <div class="row">
+                <div class="col-xs-12 m-b-15 icon-group">
 
-            <div class="for-mobile">
-                <?= Html::a('Cập nhật', ['update', 'id' => $pitch->pitch_id], ['class' => 'btn btn-hero btn-md']) ?>
-                <?= Html::a('Mở rộng sân', ['extend', 'id' => $pitch->pitch_id], ['class' => 'btn btn-hero btn-md']) ?>
-                <?= Html::a('Xóa', ['delete', 'id' => $pitch->pitch_id], [
-                        'class' => 'btn btn-danger btn-md',
+                    <?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $pitch->pitch_id], [
+                                    'title' => 'Cập nhật',
+                                    'aria-label' => 'Cập nhật',
+                                ]) ?>
+
+                    <?= Html::a('<i class="fa fa-expand"></i>', 
+                                [
+                                    'extend', 
+                                    'id' => $pitch->pitch_id
+                                ],
+                                [
+                                    'title' => 'Mở rộng sân',
+                                    'aria-label' => 'Mở rộng sân',
+                                ] 
+                                ) ?>
+
+                    <?= Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete',
+                        'id' => $pitch->pitch_id], [
+                        'class' => 'color-danger',
+                        'title' => 'Xóa',
+                        'aria-label' => 'Xóa',
                         'data' => [
                             'confirm' => 'Are you sure you want to delete this item?',
                             'method' => 'post',
                         ],
                     ]) ?>
+                </div>
+               
             </div>
             <?= DetailView::widget([
                 'model' => $pitch,
@@ -123,11 +126,46 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="col-md-5 custom-box p-tb-15">
             <div class="row">
-                <div class="col-xs-5 col-md-4">
-                    <?= Html::a('Cập nhật', ['sub-pitch/update', 'id' => $model->sub_pitch_id], ['class' => 'btn btn-hero btn-md btn-fluid']) ?>
-                </div>
-                <div class="col-xs-5 col-md-4 float-right">
-                    <Button type="button" class="btn-modal btn btn-hero btn-md btn-fluid" data-id="<?= $model->sub_pitch_id ?>">Giờ trống sân</Button>
+                <div class="col-xs-12 icon-group">
+                     <?= Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['sub-pitch/update', 'id' => $model->sub_pitch_id], [
+                                    'title' => 'Cập nhật',
+                                    'aria-label' => 'Cập nhật',
+                                ]) ?>
+                
+                    <?= Html::a('<i class="fa fa-bar-chart"></i>', 
+                                [
+                                    'sub-pitch/statistic', 
+                                    'id' => $model->sub_pitch_id
+                                ],
+                                [
+                                    'title' => 'Thống kê',
+                                    'aria-label' => 'Thống kê',
+                                ]
+                                ) ?>
+                    <?= Html::a('<i class="fa fa-plus"></i>', 
+                                [
+                                    'sub-pitch/create-booking', 
+                                    'id' => $model->sub_pitch_id
+                                ],
+                                [
+                                    'title' => 'Đặt sân tại chỗ',
+                                    'aria-label' => 'Đặt sân tại chỗ',
+                                ] 
+                                ) ?>
+
+                    <a href="#" class="link-modal" data-id="<?= $model->sub_pitch_id ?>"
+                        title="Giờ trống sân" aria-label="Giờ trống sân">
+                        <i class="fa fa-clock-o"></i>
+                    </a>
+
+                    <?= Html::a('<span class="glyphicon glyphicon-trash"></span>', ['sub-pitch/delete',
+                        'id' => $model->sub_pitch_id], [
+                        'class' => 'color-danger',
+                        'data' => [
+                            'confirm' => 'Are you sure you want to delete this item?',
+                            'method' => 'post',
+                        ],
+                    ]) ?>
                 </div>
             </div>
             <div>
@@ -186,26 +224,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ],
             ]) ?>
-
-            <div class="row">
-                <div class="col-xs-4">
-                    <?= Html::a('Thống kê', 
-                                [
-                                    'sub-pitch/statistic', 
-                                    'id' => $model->sub_pitch_id
-                                ], 
-                                ['class' => 'btn btn-hero btn-md btn-fluid']) ?>
-                </div>
-                <div class="col-xs-4 float-right">
-                    <?= Html::a('Xóa', ['sub-pitch/delete', 'id' => $model->sub_pitch_id], [
-                        'class' => 'btn btn-danger btn-md btn-fluid',
-                        'data' => [
-                            'confirm' => 'Are you sure you want to delete this item?',
-                            'method' => 'post',
-                        ],
-                    ]) ?>
-                </div>
-            </div>
 
             <div class="card for-mobile">
                 <?= Utils::catchImg(Utils::imgSrc($model->avatar_url), [

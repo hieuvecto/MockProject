@@ -1,4 +1,16 @@
+function computeTotal(array) {
+    var result = 0;
+    array.forEach(function(item) {
+        result += item;
+    });
+
+    return result;
+}
+
 $.get('/sub-pitch/week-revenue?id=' + sub_pitch_id, function(data) {
+    weekLabels.push('Tổng');
+    data.push(computeTotal(data));
+
     var ctx = document.getElementById("week-revenue-chart");
     var myChart = new Chart(ctx, {
         type: 'bar',
@@ -14,7 +26,8 @@ $.get('/sub-pitch/week-revenue?id=' + sub_pitch_id, function(data) {
                     'rgba(75, 192, 192, 0.2)',
                     'rgba(153, 102, 255, 0.2)',
                     'rgba(255, 159, 64, 0.2)',
-                    'rgba(0, 123, 167, 0.2)'
+                    'rgba(0, 123, 167, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'
                 ],
                 borderColor: [
                     'rgba(255,99,132,1)',
@@ -23,7 +36,8 @@ $.get('/sub-pitch/week-revenue?id=' + sub_pitch_id, function(data) {
                     'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)',
                     'rgba(255, 159, 64, 1)',
-                    'rgba(0, 123, 167, 1)'
+                    'rgba(0, 123, 167, 1)',
+                    'rgba(255,99,132,1)'
                 ],
                 borderWidth: 1
             }]

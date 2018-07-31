@@ -150,7 +150,7 @@ $("#dashboard-grid-reset").click(function()
 
                             $link = Url::to(['/sub-pitch/list-booking', 'id' => $subPitches[0]->sub_pitch_id]);
                             $link1 = Url::to(['/sub-pitch/statistic', 'id' => $subPitches[0]->sub_pitch_id]);
-
+                            $link2 = Url::to(['/sub-pitch/create-booking', 'id' => $subPitches[0]->sub_pitch_id]);
                             return 
                             '<a href="'.$link.'" title="Các đặt sân" aria-label="Các đặt sân" data-pjax="0">
                                 <i class="fa fa-envelope-o"></i>
@@ -158,6 +158,10 @@ $("#dashboard-grid-reset").click(function()
                             .
                             '<a href="'.$link1.'" title="Thống kê" aria-label="Thống kê" data-pjax="0">
                                 <i class="fa fa-bar-chart"></i>
+                            </a>'
+                            .
+                            '<a href="'.$link2.'" title="Đặt sân tại chỗ" aria-label="Thống kê" data-pjax="0">
+                                <i class="fa fa-plus"></i>
                             </a>';
                         },
                     ],

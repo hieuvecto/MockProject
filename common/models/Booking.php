@@ -26,6 +26,8 @@ use common\models\SubPitch;
 class Booking extends \yii\db\ActiveRecord
 {   
     public $book_range;
+    public $is_validateBookDay = true;
+    public $is_validateTime = true;
     /**
      * {@inheritdoc}
      */
@@ -51,11 +53,15 @@ class Booking extends \yii\db\ActiveRecord
             [['user_id', 'sub_pitch_id', 'created_at', 'updated_at', 'book_range'], 'integer'],
             [['book_day', 'start_time', 'end_time'], 'safe'],
             [['message'], 'string'],
-            [['is_verified'], 'string', 'max' => 1],
+            [['is_verified', 'is_paid'], 'string', 'max' => 1],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'user_id']],
             [['sub_pitch_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubPitch::className(), 'targetAttribute' => ['sub_pitch_id' => 'sub_pitch_id']],
-            ['book_day', 'validateBookDay'],
-            ['start_time', 'validateTime'],
+            ['book_day', 'validateBookDay', 'when' => function($model) {
+                return $model->is_validateBookDay;
+            }],
+            ['start_time', 'validateTime', 'when' => function($model) {
+                return $model->is_validateTime;
+            }],
         ];
     }
 
@@ -73,6 +79,7 @@ class Booking extends \yii\db\ActiveRecord
             'end_time' => 'End Time',
             'message' => 'Message',
             'is_verified' => 'Is Verified',
+            'is_paid' => 'Is Paid',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'book_range' => 'Book Range',
@@ -88,11 +95,11 @@ class Booking extends \yii\db\ActiveRecord
             (int) $book_day->format('d') < (int) $now->format('d') ) 
             $validator->addError($this, $attribute, 'Ngày đặt sân phải sau ngày hiện tại.');
         $book_time = new \DateTime($this->book_day . 'T' . $this->start_time);
-        $book_time = $book_time->modify('+5 hour');
+        $book_time = $book_time->modify('+1 hour');
         Yii::info($book_time, 'Debug book time');
         Yii::info($now, 'Debug now');
         if ($book_time < $now)
-            $validator->addError($this, 'start_time', 'Thời gian đặt sân phải sau thời gian hiện tại 5 giờ.');
+            $validator->addError($this, 'start_time', 'Thời gian đặt sân phải sau thời gian hiện tại 1 giờ.');
 
     }
 
@@ -124,7 +131,7 @@ class Booking extends \yii\db\ActiveRecord
             (`end_time` <= CAST('$escape_start_time' AS time))
         ) AND (`sub_pitch_id`=$subPitch->sub_pitch_id)
           AND (`book_day` = CAST('$escape_book_day' AS date))
-          AND (`is_verified`= 1)  ";
+          ";
 
         if ($this->booking_id)
             $queryStr = $queryStr . "AND NOT (`booking_id`=$this->booking_id)";

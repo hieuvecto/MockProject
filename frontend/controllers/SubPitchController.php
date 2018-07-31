@@ -17,7 +17,8 @@ use yii\web\HttpException;
  * SubPitchController implements the CRUD actions for SubPitch model.
  */
 class SubPitchController extends Controller
-{
+{   
+    public $layout = 'owner';
     /**
      * {@inheritdoc}
      */
@@ -38,7 +39,7 @@ class SubPitchController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['update', 'delete', 'list-booking', 'statistic', 'week-revenue'],
+                        'actions' => ['update', 'delete', 'list-booking', 'statistic', 'week-revenue',  'create-booking'],
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
                             if ($this->isAuthor()) {
@@ -77,8 +78,6 @@ class SubPitchController extends Controller
      */
     public function actionUpdate($id)
     {   
-        $this->layout = 'owner';
-        
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
@@ -119,8 +118,6 @@ class SubPitchController extends Controller
      */
     public function actionListBooking($id)
     {   
-        $this->layout = 'owner';
-        
         $subPitch = $this->findModel($id);
         $searchModel = new BookingSearch();
         $params = Yii::$app->request->queryParams;
@@ -171,6 +168,30 @@ class SubPitchController extends Controller
         ]);
     }
 
+    public function actionCreateBooking($id)
+    {   
+        $subPitch = $this->findModel($id);
+        $pitch = $subPitch->getPitch()->one();
+        $model = new Booking();
+        $model->sub_pitch_id = $subPitch->sub_pitch_id;
+        $model->user_id = 99;
+        $model->is_verified = '1';
+        $model->is_paid = '1';
+        $model->is_validateBookDay = false;
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save())
+                return $this->redirect(['view-booking', 'booking_id' => $model->booking_id]);
+        }
+
+        Yii::info($model->getErrors(), 'GEt error');
+        return $this->render('create-booking', [
+            'model' => $model,
+            'subPitch' => $subPitch,
+            'pitch' => $pitch,
+        ]);
+    }
+
     /**
      * Verifies an unverified booking model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -208,17 +229,19 @@ class SubPitchController extends Controller
         return $subPitch->getEvents();
     }
 
-    public function actionView($id)
+    public function actionView($id, $page = 'user')
     {
         $pitch = $this->findModel($id)->getPitch()->one();
+        if ($page === 'user')
+            return $this->redirect(['booking/view-pitch', 'pitch_id' => $pitch->pitch_id]);
+        if ($page === 'owner')
+            return $this->redirect(['pitch/view', 'id' => $pitch->pitch_id]);
 
-        $this->redirect(['booking/view-pitch', 'pitch_id' => $pitch->pitch_id]);
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 
     public function actionStatistic($id)
     {   
-        $this->layout = 'owner';
-
         $subPitch = $this->findModel($id);
         $bookings_total = $subPitch->getBookings()->count();
         $unverified_bookings = $subPitch->getBookings(['is_verified' => 0])->count();

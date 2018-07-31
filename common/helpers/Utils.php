@@ -2,8 +2,10 @@
 
 namespace common\helpers;
 
+use common\helpers\Utils;
 use yii\helpers\Html;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 class Utils
 {
@@ -175,5 +177,19 @@ class Utils
         }
 
         return $returnMesaage;
+	}
+
+	static public function except(array $array, array $elements) 
+	{
+		foreach ($elements as $element) {
+			$key = array_search($element, $array);
+			if ($key !== false) {
+			    unset($array[$key]);
+			}
+			else 
+				throw new NotFoundHttpException("element $element not found in array.");
+		}
+
+		return $array;
 	}
 }

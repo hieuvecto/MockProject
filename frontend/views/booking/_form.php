@@ -58,6 +58,7 @@ use common\helpers\Utils;
             'subPitch' => $subPitch,
             'pitch' => $pitch,
             'class' => isset($class) ? $class : '',
+            'page' => isset($page) ? $page : '',
         ]) ?>
     </div>
 </div>

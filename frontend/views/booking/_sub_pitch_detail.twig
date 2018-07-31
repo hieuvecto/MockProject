@@ -6,11 +6,11 @@
     <div class="backdrop-content">
         <hgroup>
             <h1 class="not-mobile">{{ html.a(subPitch.name, 
-                {0: 'sub-pitch/view', 'id': subPitch.sub_pitch_id }, 
+                {0: 'sub-pitch/view', 'id': subPitch.sub_pitch_id, 'page': page ? page : '' }, 
                 {'class': 'pure-a'})|raw}} 
             </h1>  
             <h2 class="for-mobile">{{ html.a(subPitch.name, 
-                {0: 'sub-pitch/view', 'id': subPitch.sub_pitch_id }, 
+                {0: 'sub-pitch/view', 'id': subPitch.sub_pitch_id, 'page': page ? page : '' }, 
                 {'class': 'pure-a'})|raw}} 
             </h2>   
 

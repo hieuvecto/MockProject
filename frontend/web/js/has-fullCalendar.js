@@ -55,10 +55,19 @@ $('.btn-modal').on('click', function() {
 	modal.modal('show');
 });
 
+$('.link-modal').on('click', function(event) {
+	event.preventDefault()
+	var sub_pitch_id = $(this).data('id');
+	var calendar = $('#calendar');
+	var modal = $('#myModal');
+	
+	modal.data('sub-pitch', sub_pitch_id);
+	modal.modal('show');
+});
+
 $('#myModal').on('shown.bs.modal', function (e) {
 	var calendar = $('#calendar');
 	var sub_pitch_id = $(this).data('sub-pitch');
-	console.log("Subpitch id: ", sub_pitch_id);
 	calendar.fullCalendar('render');
 	calendar.fullCalendar('removeEventSources');
 	calendar.fullCalendar('addEventSource', 
