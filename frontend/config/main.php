@@ -58,6 +58,7 @@ return [
                     'class' => 'yii\authclient\clients\Google',
                     'clientId' => '468410628024-lgu5oahg4emg9ecaaknbfgvtcncs0btu.apps.googleusercontent.com',
                     'clientSecret' => 'P968h2QeFWvcZI042gU4hc9F',
+                    // 'validateAuthState' => false,
                 ], 
                 'facebook' => [
                     'class' => 'yii\authclient\clients\Facebook',
