@@ -151,6 +151,21 @@ $("#dashboard-grid-reset").click(function()
                             1 => 'Yes',
                         ]
                 ],
+                [   
+                    'label' => 'Thanh toán?',
+                    'attribute' => 'is_paid',
+                    'format' => 'raw',
+                    'value' => function($data) 
+                    {
+                        return $data->is_paid ? 
+                        '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
+                        '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
+                    },
+                    'filter' => [
+                            0 => 'No',
+                            1 => 'Yes',
+                        ]
+                ],
                 [
                     'label' => 'Thành tiền',
                     'attribute' => 'total_price',

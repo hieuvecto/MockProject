@@ -24,6 +24,14 @@ $this->title = 'Chi tiết đặt sân';
                         'method' => 'post',
                     ],
                 ]) : '' ?>
+
+                <?= $model->is_verified && !$model->is_paid ? Html::a('Thanh toán', ['pay', 'booking_id' => $model->booking_id], [
+                    'class' => 'btn btn-hero btn-md',
+                    'data' => [
+                        'confirm' => 'Bạn có muốn xác nhận thanh toán đặt sân này?',
+                        'method' => 'post',
+                    ],
+                ]) : '' ?>
             </div>
 
             <?= DetailView::widget([
@@ -56,13 +64,24 @@ $this->title = 'Chi tiết đặt sân';
                         'attribute' => 'message',
                         'format' => ['text'],
                     ],
-                     [   
+                    [   
                         'label' => 'Xác nhận?',
                         'attribute' => 'is_verified',
                         'format' => 'raw',
                         'value' => function($data) 
                         {
                             return $data->is_verified ? 
+                            '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
+                            '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
+                        },
+                    ],
+                    [   
+                        'label' => 'Thanh toán?',
+                        'attribute' => 'is_paid',
+                        'format' => 'raw',
+                        'value' => function($data) 
+                        {
+                            return $data->is_paid ? 
                             '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
                             '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
                         },

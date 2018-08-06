@@ -31,6 +31,29 @@
             <h2 class="title">Thông tin thêm</h2>
             <p>Giá cả: {{subPitch.price_per_hour|number_format(0, '.', ',')}} {{subPitch.currency}} / 1 giờ</p>
             <p>Loại sân: {{subPitch.size}} người</p>
+
+            {% if campaigns | length > 0 %}
+                <p>Khuyến mãi: </p>
+                <ul>
+                    {% for campaign in campaigns %}
+                        <li>
+                            <p class="inner-list-block"> 
+                                {{ html.a(campaign.name, 
+                                {0 :'campaign/view-public', 'id' : campaign.campaign_id})|raw }}:
+                                {% if campaign.type == 0 %}
+                                    {{ 'Giảm giá ' ~ campaign.value ~ '%'}}
+                                {% endif %}
+                            </p>
+                            
+                            <p class="inner-list-block"> 
+                                <i class="fa fa-clock-o"></i> {{ campaign.start_time|date('Y/m/d')}} - 
+                                {{ campaign.end_time|date('Y/m/d')}}
+                            </p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             <Button type="button" class="btn-modal btn btn-hero btn-md" data-id="{{subPitch.sub_pitch_id}}">Giờ trống sân</Button>
         </div>
     </div>

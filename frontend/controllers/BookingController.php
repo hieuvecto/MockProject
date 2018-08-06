@@ -120,15 +120,27 @@ class BookingController extends Controller
         $pitch = $this->findPitchModel($pitch_id);
         $subPitches = $pitch->getSubPitches()->all();
 
-        if (count($subPitches) > 1) 
+        if (count($subPitches) > 1) {
+            $campaigns_array = [];
+
+            foreach ($subPitches as $subPitch) {
+                $campaigns_array[] = $subPitch->getCampaigns()->all();
+            }
+
             return $this->render('view-pitch-multiple.twig', [
                 'pitch' => $pitch,
-                'subPitches' => $subPitches
+                'subPitches' => $subPitches,
+                'campaigns_array' => $campaigns_array,
             ]);
+        }
+            
+
+        $campaigns = $subPitches[0]->getCampaigns()->all();
 
         return $this->render('view-pitch.twig', [
             'pitch' => $pitch,
             'subPitch' => $subPitches[0],
+            'campaigns' => $campaigns,
         ]);
     }
 

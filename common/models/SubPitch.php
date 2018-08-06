@@ -123,6 +123,23 @@ class SubPitch extends \yii\db\ActiveRecord
         return $this->hasOne(Pitch::className(), ['pitch_id' => 'pitch_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCampaignSubPitches()
+    {
+        return $this->hasMany(CampaignSubPitch::className(), ['sub_pitch_id' => 'sub_pitch_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCampaigns()
+    {
+        return $this->hasMany(Campaign::className(), ['campaign_id' => 'campaign_id'])
+                    ->viaTable('CampaignSubPitch', ['sub_pitch_id' => 'sub_pitch_id']);
+    }
+
     public function beforeDelete()
     {
         if (!parent::beforeDelete()) {
@@ -212,6 +229,7 @@ class SubPitch extends \yii\db\ActiveRecord
                     (`sub_pitch_id`=$sub_pitch_id)
                 AND (`book_day` = CAST('$day' AS date))
                 AND (`is_verified`= 1)
+                AND (`is_paid`= 1)
                 ");
 
             $rs = $command->queryAll();

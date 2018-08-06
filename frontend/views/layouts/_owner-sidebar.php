@@ -54,6 +54,27 @@ $owner = \Yii::$app->owner->identity;
         </ul>
       </li>
 
+      <li class="treeview <?= Utils::isController('campaign') ?>">
+        <a href="#">
+          <i class="fa fa-shopping-bag"></i> <span>Quản lý khuyến mãi</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li class="<?= Utils::isRoute('campaign/index') ?>">
+            <a href="<?= Url::to(['/campaign/index']) ?>">
+              <i class="fa fa-list-alt"></i> Danh sách
+            </a>
+          </li>
+          <li class="<?= Utils::isRoute('campaign/create') ?>">
+            <a href="<?= Url::to(['/campaign/create']) ?>">
+              <i class="fa fa-plus"></i> Tạo khuyến mãi
+            </a>
+          </li>
+        </ul>
+      </li>
+
       <li class="treeview <?= Utils::isController('owner', 'owner/dashboard') ?>">
         <a href="#">
           <i class="fa fa-user"></i> <span>Quản lý tài khoản</span>

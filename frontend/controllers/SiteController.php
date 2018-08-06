@@ -13,6 +13,9 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 
+use common\models\Campaign;
+use common\models\CampaignSubPitch;
+
 /**
  * Site controller
  */
@@ -74,7 +77,13 @@ class SiteController extends Controller
     {   
         $this->layout = 'has-top-backdrop';
         
-        return $this->render('index');
+        $max_campaign = 6;
+
+        $campaigns = Campaign::find()->limit($max_campaign)->all();
+
+        return $this->render('index', [
+            'campaigns' => $campaigns,
+        ]);
     }
 
     /**

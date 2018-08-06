@@ -144,7 +144,24 @@ class Booking extends \yii\db\ActiveRecord
             $validator->addError($this, 'book_range', 'Thời gian đặt sân chồng lên thời gian đặt sân khác.');
         }
 
-        $this->total_price = Booking::diffByHours($this->end_time, $this->start_time) * $subPitch->price_per_hour;
+        $original_total_price 
+            = Booking::diffByHours($this->end_time, $this->start_time) * $subPitch->price_per_hour;
+        $campaigns = $subPitch->getCampaigns()->all();
+        $total_price = $original_total_price;
+        Yii::info($total_price, 'Total_price');
+        foreach ($campaigns as $campaign) {
+            switch ($campaign->type) {
+                case 0:
+                    $total_price = $total_price - $original_total_price * $campaign->value / 100;
+                    Yii::info($total_price, 'Total_price');
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+
+        $this->total_price = $total_price;
     }
 
     /**

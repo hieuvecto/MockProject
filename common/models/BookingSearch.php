@@ -22,7 +22,7 @@ class BookingSearch extends Booking
     {
         return [
             [['booking_id', 'user_id', 'sub_pitch_id', 'created_at', 'updated_at'], 'integer'],
-            [['book_day', 'start_time', 'end_time', 'message', 'is_verified'], 'safe'],
+            [['book_day', 'start_time', 'end_time', 'message', 'is_verified', 'is_paid'], 'safe'],
             [['sub_pitch_name'], 'string'],
         ];
     }
@@ -71,7 +71,8 @@ class BookingSearch extends Booking
             'end_time' => $this->end_time ? new Expression("CAST('$this->end_time' AS time)") : '',
             'created_at' => $this->created_at ? new Expression("CAST('$this->created_at' AS datetime)") : '',
             'updated_at' => $this->updated_at ? new Expression("CAST('$this->updated_at' AS datetime)") : '',
-            'is_verified'=> $this->is_verified
+            'is_verified'=> $this->is_verified,
+            'is_paid'=> $this->is_paid,
         ]);
 
         $query->andFilterWhere(['like', 'message', $this->message]);

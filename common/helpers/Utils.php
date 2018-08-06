@@ -180,7 +180,8 @@ class Utils
 	}
 
 	static public function except(array $array, array $elements) 
-	{
+	{	
+		Yii::info($array, "Debug array");
 		foreach ($elements as $element) {
 			$key = array_search($element, $array);
 			if ($key !== false) {
@@ -191,5 +192,22 @@ class Utils
 		}
 
 		return $array;
+	}
+
+	static public function has_dupes(array $array) {
+	    $dupe_array = [];
+	    foreach ($array as $val) {
+	    	$key = 'key' . $val;
+
+	    	if (isset($dupe_array[$key]))
+	    		$dupe_array[$key] += 1;
+	    	else
+	    		$dupe_array[$key] = 1;
+	    	
+	        if ($dupe_array[$key] > 1) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 }

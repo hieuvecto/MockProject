@@ -51,6 +51,13 @@
                         '<i class="fa fa-times color-danger" aria-hidden="true"></i>'|raw
                     },
                     {
+                        'label': 'Thanh toán?',
+                        'format': 'raw',
+                        'value': model.is_paid ? 
+                        '<i class="fa fa-check color-success" aria-hidden="true"></i>'|raw : 
+                        '<i class="fa fa-times color-danger" aria-hidden="true"></i>'|raw
+                    },
+                    {
                         'label': 'Thành tiền',
                         'value': model.total_price|number_format(0, '.', ',') ~ ' ' ~ subPitch.currency
                     },

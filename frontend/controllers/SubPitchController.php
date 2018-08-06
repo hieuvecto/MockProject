@@ -30,6 +30,7 @@ class SubPitchController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
                     'verify' => ['POST'],
+                    'pay' => ['POST'],
                     'get-events' => ['GET'],
                 ],
             ],
@@ -50,7 +51,7 @@ class SubPitchController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['view-booking', 'verify'],
+                        'actions' => ['view-booking', 'verify', 'pay'],
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
                             if ($this->isOwnerOfPitch()) {
@@ -152,14 +153,6 @@ class SubPitchController extends Controller
         $pitch = $subPitch->getPitch()->one();
         $count = $pitch->getSubPitches()->count();
 
-        if ($count > 1)
-            return $this->render('view-booking-multiple', [
-                'model' => $model,
-                'user' => $user,
-                'pitch' => $pitch,
-                'subPitch' => $subPitch,
-            ]);
-
         return $this->render('view-booking', [
             'model' => $model,
             'user' => $user,
@@ -207,6 +200,7 @@ class SubPitchController extends Controller
             throw new HttpException(403, 'This booking was verifed.');
 
         $model->is_verified = '1';
+        $model->is_validateBookDay = false;
         if (!$model->save())
         {   
             Yii::info($model->getErrors(), 'Get Errors');
@@ -220,6 +214,34 @@ class SubPitchController extends Controller
 
         return $this->redirect(['view-booking', 'booking_id' => $booking_id]); 
     }
+
+    public function actionPay($booking_id)
+    {
+        $model = $this->findBookingModel($booking_id);
+
+        if (!$model->is_verified)
+            throw new HttpException(403, 'This booking was not verifed.');
+
+        if ($model->is_paid)
+            throw new HttpException(403, 'This booking was paid.');
+
+        $model->is_paid = '1';
+        $model->is_validateBookDay = false;
+        
+        if (!$model->save())
+        {   
+            Yii::info($model->getErrors(), 'Get Errors');
+            Yii::$app->session->setFlash('error', 
+                'Đã có lỗi khi Thanh toán đặt sân này: ' . 
+                Utils::arrrayToStrError($model->getErrors()) );
+        }
+        else
+            Yii::$app->session->setFlash('success', 
+                'Thanh toán đặt sân thành công.');
+
+        return $this->redirect(['view-booking', 'booking_id' => $booking_id]); 
+    }
+
 
     public function actionGetEvents($id)
     {   

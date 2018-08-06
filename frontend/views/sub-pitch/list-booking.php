@@ -138,6 +138,21 @@ $("#dashboard-grid-reset").click(function()
                             1 => 'Yes',
                         ]
                 ],
+                [   
+                    'label' => 'Thanh toán?',
+                    'attribute' => 'is_paid',
+                    'format' => 'raw',
+                    'value' => function($data) 
+                    {
+                        return $data->is_paid ? 
+                        '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
+                        '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
+                    },
+                    'filter' => [
+                            0 => 'No',
+                            1 => 'Yes',
+                        ]
+                ],
                 [
                     'label' => 'Thành tiền',
                     'attribute' => 'total_price',
@@ -161,20 +176,26 @@ $("#dashboard-grid-reset").click(function()
                 [
                         'format'=>'raw',
                         'value' => function($data) 
-                        {
-                            if ($data->is_verified)
-                                return Html::a('View', 
-                                    [
-                                        'view-booking', 
-                                        'booking_id' => $data->booking_id
-                                    ], 
-                                    ['class' => 'btn btn-hero btn-sm']);
-                            return Html::a('Verify', 
+                        {   
+                            $label = 'Xem';
+                            $typeBtn = 'btn-primary';
+
+                            if ($data->is_verified && !$data->is_paid) {
+                                $label = 'Thanh toán';
+                                $typeBtn = 'btn-hero';
+                            }
+                            elseif (!$data->is_verified) {
+                                $label = 'Xác nhận';
+                                $typeBtn = 'btn-info';
+                            }
+                            
+
+                            return Html::a($label, 
                                 [
                                     'view-booking', 
                                     'booking_id' => $data->booking_id
                                 ], 
-                                ['class' => 'btn btn-hero btn-sm']);
+                                ['class' => 'btn btn-sm ' . $typeBtn]);
                         }
             
                 ],

@@ -1,9 +1,35 @@
 <?php
 use yii\helpers\Html;
+use common\helpers\Utils;
 /* @var $this yii\web\View */
 
 $this->title = 'Tìm Sân Online | Tìm kiếm và đặt sân bóng Online';
+$this->registerJS("  
+$(document).ready(function($) {
+ 
+        $('#myCarousel').carousel({
+                interval: 5000
+        });
+ 
+        $('#carousel-text').html($('#slide-content-0').html());
+ 
+        //Handles the carousel thumbnails
+       $('[id^=carousel-selector-]').click( function(){
+            var id = this.id.substr(this.id.lastIndexOf('-') + 1);
+            var id = parseInt(id);
+            $('#myCarousel').carousel(id);
+        });
+ 
+ 
+        // When the carousel slides, auto update the text
+        $('#myCarousel').on('slid.bs.carousel', function (e) {
+                var id = $('.active.item.item-cp').attr('data-slide-number');
+                $('#carousel-text').html($('#slide-content-'+id).html());
+        });
+});
+");
 
+\Yii::info($campaigns, 'campaigns');
 ?>
 
 <div class="container-fluid">
@@ -66,6 +92,85 @@ $this->title = 'Tìm Sân Online | Tìm kiếm và đặt sân bóng Online';
 </div>
 
 <section class="banner-sec">
+  <div class="container m-t-20 m-b-20">
+    <div id="main_area">
+          <!-- Slider -->
+          <div class="row">
+              <div class="col-xs-12" id="slider">
+                  <!-- Top part of the slider -->
+                  <div class="row">
+                      <div class="col-sm-8" id="carousel-bounding-box">
+                          <div class="carousel slide" id="myCarousel">
+                              <!-- Carousel items -->
+                              <div class="carousel-inner">
+                                <?php foreach($campaigns as $key => $campaign): ?>
+                                  <div class="<?= $key === 0 ? 'active' : '' ?> item item-cp" data-slide-number="<?= $key ?>">
+                                  <img class="img-carousel-inner" src="<?= Utils::catchImgSrc(Utils::imgSrc($campaign->avatar_url)) ?>">
+                                  </div>
+
+                                <?php endforeach; ?>
+                              </div><!-- Carousel nav -->
+                              <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                                  <span class="glyphicon glyphicon-chevron-left"></span>                                       
+                              </a>
+                              <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                                  <span class="glyphicon glyphicon-chevron-right"></span>                                       
+                              </a>                                
+                              </div>
+                      </div>
+
+                      <div class="col-sm-4" id="carousel-text"></div>
+
+                      <div id="slide-content" style="display: none;">
+                        <?php foreach($campaigns as $key => $campaign): ?>
+                          <div id="slide-content-<?= $key ?>">
+                              <h2><?= $campaign->name ?></h2>
+                              <p><?php 
+                                if (strlen($campaign->description) > 100) {
+                                  $sub_str = substr($campaign->description, 0, 100);
+                                  echo $substr . '...';
+                                }
+                                else
+                                  echo $campaign->description;
+                              ?></p>
+                              <p><?php 
+                                switch ($campaign->type) {
+                                  case 0:
+                                    echo 'Giảm giá' . ' ' . $campaign->value . '%';
+                                    break;
+                                  
+                                  default:
+                                    echo 'Không xác định';
+                                    break;
+                                }
+                              ?>
+                              </p>
+                              <p class="sub-text"><?= $campaign->start_time ?> - <?= $campaign->end_time ?>
+                                <?= Html::a('Xem chi tiết', ['campaign/view-public', 'id' => $campaign->campaign_id]) ?>
+                              </p>
+                          </div>
+
+                        <?php endforeach; ?>
+                      </div>
+                  </div>
+              </div>
+          </div><!--/Slider-->
+
+          <div class="row hidden-xs" id="slider-thumbs">
+                  <!-- Bottom switcher of slider -->
+                  <ul class="hide-bullets">
+                    <?php foreach($campaigns as $key => $campaign): ?>
+                      <li class="col-sm-2">
+                          <a class="thumbnail" id="carousel-selector-<?= $key ?>">
+                            <img class="img-thumbnail-custom" src="<?= Utils::catchImgSrc(Utils::imgSrc($campaign->avatar_url)) ?>">
+                          </a>
+                      </li>
+                    <?php endforeach; ?>
+                  </ul>                 
+          </div>
+    </div>
+  </div>
+
   <div class="container">
     <div class="row">
       <h3 class="section-title title text-center">ĐỊA ĐIỂM HÀNG ĐẦU</h3>

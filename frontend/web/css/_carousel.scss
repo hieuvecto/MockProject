@@ -138,6 +138,24 @@ Image credits: unsplash.com
   }
 }
 
+//slider
+.hide-bullets {
+  list-style:none;
+  margin-left: -40px;
+  margin-top:20px;
+}
+
+
+.img-carousel-inner {
+  width: 100%;
+  height: 350px !important;
+}
+
+.img-thumbnail-custom {
+  width: 100%;
+  height: 120px !important;
+}
+
 /********************************/
 /*          Media Queries       */
 /********************************/
