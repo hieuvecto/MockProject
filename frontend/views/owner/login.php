@@ -27,7 +27,7 @@ $this->title = 'Đăng Nhập';
                             'class' => 'login100-form validate-form'
                     ]]); ?>
                         <span class="login100-form-title p-b-49">
-                            Đăng Nhập
+                            Trang chủ sân
                         </span>
 
                         <div class="wrap-input100 validate-input m-b-23" data-validate="Username is required">

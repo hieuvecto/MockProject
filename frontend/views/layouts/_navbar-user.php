@@ -24,7 +24,7 @@ $owner = \Yii::$app->owner->identity;
     <?= Html::a('Tìm và đặt sân', ['booking/pitches'], 
       ['class' => 'list-group-item']) ?>
 
-    <?= Html::a('Danh sách đặt sân', ['booking/dashboard'], 
+    <?= Html::a('Lịch sử đặt sân', ['booking/dashboard', 'sort' => '-created_at'], 
       ['class' => 'list-group-item']) ?>
  
     <?= Html::a('Profile', ['user/view', 'id' => $user->user_id ], 
@@ -65,20 +65,23 @@ $owner = \Yii::$app->owner->identity;
             </form>
 
             <ul class="nav navbar-nav navbar-right">
-                <li>
+                <?php if (!isset($user)): ?>
+                  <li>
                     <?= Html::a('Đăng ký sân', ['owner/dashboard'],
                         ['class' => 'navbar-a'] ) ?>
-                </li>
+                  </li>
+                <?php endif; ?>
+
                 <?php if (isset($user)):?>
                 <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu
                   <span class="caret"></span></a>
                   <ul class="dropdown-menu">
                       <li>
                         <?= Html::a('Tìm và đặt sân', ['booking/pitches']) ?>
                       </li>
                       <li>
-                        <?= Html::a('Danh sách đặt sân', ['booking/dashboard']) ?>
+                        <?= Html::a('Lịch sử đặt sân', ['booking/dashboard', 'sort' => '-created_at']) ?>
                       </li>
                       <li class="divider"></li>
                       <li>

@@ -274,7 +274,6 @@ class Owner extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                             (`sub_pitch_id`=$sub_pitch_id)
                         AND (`book_day` = CAST('$day' AS date))
                         AND (`is_verified`= 1)
-                        AND (`is_paid`= 1)
                         ");
                     Yii::info("tree 2");
                     $rs = $command->queryAll();
@@ -328,7 +327,6 @@ class Owner extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                         AND (`book_day` >= CAST('$bot' AS date))
                         AND (`book_day` < CAST('$top' AS date))
                         AND (`is_verified`= 1)
-                        AND (`is_paid`= 1)
                         ");
                  
                     $rs = $command->queryAll();

@@ -44,16 +44,9 @@
                         'format': 'ntext',
                     },
                     {
-                        'label': 'Xác nhận?',
-                        'format': 'raw',
-                        'value': model.is_verified ? 
-                        '<i class="fa fa-check color-success" aria-hidden="true"></i>'|raw : 
-                        '<i class="fa fa-times color-danger" aria-hidden="true"></i>'|raw
-                    },
-                    {
                         'label': 'Thanh toán?',
                         'format': 'raw',
-                        'value': model.is_paid ? 
+                        'value': model.is_verified ? 
                         '<i class="fa fa-check color-success" aria-hidden="true"></i>'|raw : 
                         '<i class="fa fa-times color-danger" aria-hidden="true"></i>'|raw
                     },
@@ -84,6 +77,7 @@
         	{% include '_sub_pitch_detail.twig' with {
         		'subPitch': subPitch,
         		'pitch': pitch,
+                'page': 'user',
         		'isFullCalendar': false,
                 'class': 'backdrop-booking',
         	}%}

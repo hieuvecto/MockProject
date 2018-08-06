@@ -12,23 +12,34 @@ $this->title = 'Chi tiết đặt sân';
 ?>
 <div class="container">
 
-    <h1 class="title"><?= Html::encode($this->title) ?></h1>
+    <section class="content-header">
+      <h1 class="title" style="width: 40%;">
+        <?= Html::encode($this->title) ?>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-futbol-o"></i> Quản lý sân</a></li>
+        <li><?= Html::a('Danh sách', ['pitch/index', 'sort' => '-created_at']) ?></a></li>
+        <li><?= Html::a('Chi tiết sân', ['pitch/view', 'id' => $subPitch->pitch_id]) ?></li>
+        <li><?= Html::a('Danh sách đặt sân', ['sub-pitch/list-booking', 'id' => $subPitch->sub_pitch_id, 'sort' => '-created_at'])?></li>
+        <li class="active">Chi tiết đặt sân</li>
+      </ol>
+    </section>
 
     <div class="row">
         <div class="col-md-5 custom-box p-tb-15">
             <div>
-                <?= !$model->is_verified ? Html::a('Xác nhận', ['verify', 'booking_id' => $model->booking_id], [
+                <?= !$model->is_verified ? Html::a('Thanh toán', ['verify', 'booking_id' => $model->booking_id], [
                     'class' => 'btn btn-hero btn-md',
                     'data' => [
-                        'confirm' => 'Bạn có chắc muốn xác nhận đặt sân này?',
+                        'confirm' => 'Bạn có chắc muốn thanh toán đặt sân này?',
                         'method' => 'post',
                     ],
                 ]) : '' ?>
 
-                <?= $model->is_verified && !$model->is_paid ? Html::a('Thanh toán', ['pay', 'booking_id' => $model->booking_id], [
-                    'class' => 'btn btn-hero btn-md',
+                <?= !$model->is_verified ? Html::a('Xóa', ['delete-booking', 'booking_id' => $model->booking_id], [
+                    'class' => 'btn btn-danger btn-md',
                     'data' => [
-                        'confirm' => 'Bạn có muốn xác nhận thanh toán đặt sân này?',
+                        'confirm' => 'Bạn có chắc xóa đặt sân này?',
                         'method' => 'post',
                     ],
                 ]) : '' ?>
@@ -65,23 +76,12 @@ $this->title = 'Chi tiết đặt sân';
                         'format' => ['text'],
                     ],
                     [   
-                        'label' => 'Xác nhận?',
+                        'label' => 'Thanh toán?',
                         'attribute' => 'is_verified',
                         'format' => 'raw',
                         'value' => function($data) 
                         {
                             return $data->is_verified ? 
-                            '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
-                            '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
-                        },
-                    ],
-                    [   
-                        'label' => 'Thanh toán?',
-                        'attribute' => 'is_paid',
-                        'format' => 'raw',
-                        'value' => function($data) 
-                        {
-                            return $data->is_paid ? 
                             '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
                             '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
                         },

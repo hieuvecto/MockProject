@@ -10,7 +10,17 @@ use common\helpers\Utils;
 $this->title = $pitch->name;
 ?>
 <div class="container">
-    <h1 class="title"><?= Html::encode($this->title) ?></h1>
+    <section class="content-header">
+      <h1 class="title">
+        <?= Html::encode($this->title) ?>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-futbol-o"></i> Quản lý sân</a></li>
+        <li><?= Html::a('Danh sách', ['pitch/index', 'sort' => '-created_at']) ?></a></li>
+        <li class="active">Chi tiết sân</li>
+      </ol>
+    </section>
+
     <div class="row">
         <div class="col-md-5 custom-box p-tb-15">
             <div class="row">
@@ -70,9 +80,10 @@ $this->title = $pitch->name;
             </div>
             <div>
                 <div class="float-right">
-                    Sân có <?= $subPitch->getBookings(['is_verified' => 0])->count() ?> đặt sân chưa xác nhận. 
-                    <?= Html::a('Xác nhận', ['sub-pitch/list-booking', 'id' => $subPitch->sub_pitch_id, 
-                    'BookingSearch' => [ 'is_verified' => 0]], ['class' => 'btn btn-hero btn-sm ']) ?>
+                    <?php $count = $subPitch->getBookings(['is_verified' => 0])->count(); ?>
+                    <?= $count > 0 ? 'Sân có ' . $count . ' đặt sân chưa thanh toán.':  'Sân chưa có thêm đặt sân nào.'?>  
+                    <?= Html::a('Danh sách', ['sub-pitch/list-booking', 'id' => $subPitch->sub_pitch_id, 
+                    'sort' => '-created_at'], ['class' => 'btn btn-hero btn-sm ']) ?>
                 </div>
             </div>
             <?= DetailView::widget([
@@ -109,20 +120,6 @@ $this->title = $pitch->name;
                     [
                         'label' => 'Số điện thoại',
                         'attribute' => 'phone_number',
-                    ],
-                    [
-                        'label' => 'Chưa xác nhận đặt sân?',
-                        'value' => function($data) {
-                            $subPitches = $data->getSubPitches()->all();
-                            $count = 0;
-
-                            foreach ($subPitches as $subPitch) 
-                            {   
-                                // count unverified bookings
-                                $count += $subPitch->getBookings(['is_verified' => 0])->count();
-                            }
-                            return $count;
-                        },
                     ],
                     [   
                         'label' => 'Loại sân',

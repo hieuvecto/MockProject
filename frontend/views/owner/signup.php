@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'login100-form validate-form'
                     ]]); ?>
                         <span class="login100-form-title p-b-49">
-                            Đăng Ký
+                            Trang chủ sân
                         </span>
 
                         <div class="wrap-input100 validate-input m-b-23" data-validate="Username is required">

@@ -10,7 +10,7 @@ use common\helpers\Utils;
 /* @var $searchModel common\models\PitchSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Danh sách đặt sân';
+$this->title = 'Lịch sử đặt sân';
 
 $this->registerJS('
 $(".input-group-addon").on("click", function() {
@@ -137,27 +137,12 @@ $("#dashboard-grid-reset").click(function()
                     'headerOptions' => ['style' => 'width:10%'],
                 ],
                 [   
-                    'label' => 'Xác nhận?',
+                    'label' => 'Thanh toán?',
                     'attribute' => 'is_verified',
                     'format' => 'raw',
                     'value' => function($data) 
                     {
                         return $data->is_verified ? 
-                        '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
-                        '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
-                    },
-                    'filter' => [
-                            0 => 'No',
-                            1 => 'Yes',
-                        ]
-                ],
-                [   
-                    'label' => 'Thanh toán?',
-                    'attribute' => 'is_paid',
-                    'format' => 'raw',
-                    'value' => function($data) 
-                    {
-                        return $data->is_paid ? 
                         '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
                         '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
                     },

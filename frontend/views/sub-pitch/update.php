@@ -14,7 +14,17 @@ $model->currency = 'VND';
 ?>
 <div class="container">
 
-    <h1 class="title"><?= Html::encode($this->title) ?></h1>
+    <section class="content-header">
+      <h1 class="title">
+        <?= Html::encode($this->title) ?>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-futbol-o"></i> Quản lý sân</a></li>
+        <li><?= Html::a('Danh sách', ['pitch/index', 'sort' => '-created_at']) ?></a></li>
+        <li><?= Html::a('Chi tiết sân', ['pitch/view', 'id' => $model->pitch_id]) ?></li>
+        <li class="active">Cập nhật sân con</li>
+      </ol>
+    </section>
 
    	<div class="row">
    		<div class="col-md-4 p-tb-15 custom-box">

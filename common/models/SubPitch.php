@@ -243,7 +243,6 @@ class SubPitch extends \yii\db\ActiveRecord
                     (`sub_pitch_id`=$sub_pitch_id)
                 AND (`book_day` = CAST('$day' AS date))
                 AND (`is_verified`= 1)
-                AND (`is_paid`= 1)
                 ");
 
             $rs = $command->queryAll();

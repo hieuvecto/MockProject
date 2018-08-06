@@ -13,7 +13,16 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container list-rps">
 
-    <h1 class="title"><?= Html::encode($this->title) ?></h1>
+    <section class="content-header">
+      <h1 class="title">
+        <?= Html::encode($this->title) ?>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-futbol-o"></i> Quản lý sân</a></li>
+        <li><?= Html::a('Danh sách', ['pitch/index', 'sort' => '-created_at']) ?></a></li>
+        <li class="active">Chi tiết sân</li>
+      </ol>
+    </section>
 
     <div class="row">
         <div class="col-md-5 custom-box p-tb-15">
@@ -170,9 +179,10 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div>
                 <div class="float-right">
-                    Sân có <?= $model->getBookings(['is_verified' => 0])->count() ?> đặt sân chưa xác nhận. 
-                    <?= Html::a('Xác nhận', ['sub-pitch/list-booking', 'id' => $model->sub_pitch_id, 
-                    'BookingSearch' => [ 'is_verified' => 0]], ['class' => 'btn btn-hero btn-sm ']) ?>
+                    <?php $count = $model->getBookings(['is_verified' => 0])->count(); ?>
+                    <?= $count > 0 ? 'Sân có ' . $count . ' đặt sân chưa thanh toán.':  'Sân chưa có thêm đặt sân nào.'?>   
+                    <?= Html::a('Danh sách', ['sub-pitch/list-booking', 'id' => $model->sub_pitch_id, 
+                    'sort' => '-created_at'], ['class' => 'btn btn-hero btn-sm ']) ?>
                 </div>
             </div>
             <?= DetailView::widget([
@@ -207,10 +217,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         'label' => 'Giá thuê / giờ',
                         'attribute' => 'Price Per Hour',
                         'value' => number_format($model->price_per_hour, 0, '.', ',') . ' ' . $model->currency
-                    ],
-                    [
-                        'label' => 'Chưa xác nhận đặt sân',
-                        'value' => $model->getBookings(['is_verified' => 1])->count(),
                     ],
                     [
                         'label' => 'Tạo lúc',

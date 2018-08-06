@@ -69,7 +69,7 @@ $(document).ready(function($) {
               Nhanh chóng và tiện lợi
               </h3>
           </hgroup>       
-          <button class="btn btn-hero btn-lg" role="button">Đặt sân ngay</button>
+          <?= Html::a('Đặt sân ngay', ['booking/pitches'], ['class' => 'btn btn-hero btn-lg']) ?>
         </div>
       </div>
       <div class="item slides">
@@ -82,9 +82,7 @@ $(document).ready(function($) {
               <h3 class="for-mobile">theo cách chuyên nghiệp</h3>    
               <h3 class="not-mobile">theo cách chuyên nghiệp với nhiều tính năng và biểu đồ trực quan</h3>
           </hgroup>
-          <button class="btn btn-hero btn-lg" role="button">
-          Đăng ký sân ngay
-          </button>
+          <?= Html::a('Đăng ký sân ngay', ['owner/dashboard'], ['class' => 'btn btn-hero btn-lg']) ?>
         </div>
       </div>
     </div> 

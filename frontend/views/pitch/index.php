@@ -47,9 +47,15 @@ $("#dashboard-grid-reset").click(function()
 ');
 ?>
 <div class="container">
-
-    <h1 class="title"><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <section class="content-header">
+      <h1 class="title">
+        <?= Html::encode($this->title) ?>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-futbol-o"></i> Quản lý sân</a></li>
+        <li class="active">Danh sách</li>
+      </ol>
+    </section>
 
     <p>
         <?= Html::a('Tạo sân', ['create'], ['class' => 'btn btn-hero btn-md']) ?>
@@ -148,7 +154,7 @@ $("#dashboard-grid-reset").click(function()
                             if (count($subPitches) > 1)
                                 return '<p style="font-size: 1rem;">'.count($subPitches) . ' sân con </p>'; 
 
-                            $link = Url::to(['/sub-pitch/list-booking', 'id' => $subPitches[0]->sub_pitch_id]);
+                            $link = Url::to(['/sub-pitch/list-booking', 'id' => $subPitches[0]->sub_pitch_id, 'sort' => '-created_at']);
                             $link1 = Url::to(['/sub-pitch/statistic', 'id' => $subPitches[0]->sub_pitch_id]);
                             $link2 = Url::to(['/sub-pitch/create-booking', 'id' => $subPitches[0]->sub_pitch_id]);
                             return 

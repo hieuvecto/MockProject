@@ -2,6 +2,7 @@
 use yii\web\View;
 use common\helpers\Utils;
 use common\models\Owner;
+use yii\helpers\Html;
 
 $this->title = 'Bảng điều khiển';
 $this->registerJsFile('/libs/Chart.js-2.7.2/dist/Chart.min.js', [
@@ -21,10 +22,14 @@ $this->registerJsFile('/js/owner-dashboard.js', [
 ]);
 ?>
 <section class="content-header">
-  <h1>
-    <?= $this->title ?>
-  </h1>
-</section>
+      <h1 style="padding-left: 15px;">
+        <?= Html::encode($this->title) ?>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+      </ol>
+    </section>
 
 <section class="content">
 	<div class="row">
@@ -39,7 +44,10 @@ $this->registerJsFile('/js/owner-dashboard.js', [
             <div class="icon">
               <i class="fa fa-futbol-o"></i>
             </div>
-            <a href="/pitch/index" class="small-box-footer">Thông tin thêm <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?= $countPitches > 0 ? '/pitch/index' : '/pitch/create' ?>" class="small-box-footer">
+            	<?= $countPitches > 0 ? 'Thông tin thêm' : 'Tạo sân' ?>
+            	<i class="fa fa-arrow-circle-right"></i>
+            </a>
           </div>
         </div>
 		<div class="col-lg-3 col-xs-6">
@@ -62,7 +70,7 @@ $this->registerJsFile('/js/owner-dashboard.js', [
             <div class="inner">
               <h3><?= $countUnverified ?></h3>
 
-              <p>Số đặt sân chưa xác nhận</p>
+              <p>Số đặt sân chưa thanh toán</p>
             </div>
             <div class="icon">
               <i class="fa fa-envelope-open-o"></i>

@@ -1,4 +1,5 @@
 <?php
+use yii\helpers\Html;
 use yii\web\View;
 use common\helpers\Utils;
 use common\models\Owner;
@@ -22,11 +23,17 @@ $this->registerJsFile('/js/sub-pitch-statistic.js', [
 	'depends' => '\frontend\assets\AppOwnerAsset'
 ]);
 ?>
-<section class="content-header">
-  <h1>
-    <?= $this->title ?>
-  </h1>
-</section>
+<section class="content-header" style="padding-left: 15px;">
+      <h1 class="title">
+        <?= Html::encode($this->title) ?>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-futbol-o"></i> Quản lý sân</a></li>
+        <li><?= Html::a('Danh sách', ['pitch/index', 'sort' => '-created_at']) ?></a></li>
+        <li><?= Html::a('Chi tiết sân', ['pitch/view', 'id' => $subPitch->pitch_id]) ?></li>
+        <li class="active">Thống kê</li>
+      </ol>
+    </section>
 
 <section class="content">
 	<div class="row">
@@ -41,7 +48,8 @@ $this->registerJsFile('/js/sub-pitch-statistic.js', [
             <div class="icon">
               <i class="fa fa-envelope-o"></i>
             </div>
-            <a href="<?= Url::to(['/sub-pitch/list-booking', 'id' => $subPitch->sub_pitch_id]) ?>" 
+            <a href="<?= Url::to(['/sub-pitch/list-booking', 'id' => $subPitch->sub_pitch_id, 
+              'sort' => '-created_at']) ?>" 
                     class="small-box-footer">Thông tin thêm <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
@@ -56,7 +64,7 @@ $this->registerJsFile('/js/sub-pitch-statistic.js', [
             <div class="icon">
               <i class="fa fa-envelope-open-o"></i>
             </div>
-            <a href="<?= Url::to(['/sub-pitch/list-booking', 'id' => $subPitch->sub_pitch_id, 'BookingSearch' => [ 'is_verified' => 0]]) ?>" 
+            <a href="<?= Url::to(['/sub-pitch/list-booking', 'id' => $subPitch->sub_pitch_id, 'BookingSearch' => [ 'is_verified' => 0], 'sort' => '-created_at']) ?>" 
             class="small-box-footer">Thông tin thêm <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>

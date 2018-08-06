@@ -48,8 +48,15 @@ $("#dashboard-grid-reset").click(function()
 ?>
 <div class="container">
 
-    <h1 class="title"><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <section class="content-header">
+      <h1 class="title">
+        <?= Html::encode($this->title) ?>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-shopping-bag"></i> Quản lý khuyến mãi</a></li>
+        <li class="active">Danh sách</li>
+      </ol>
+    </section>
 
     <p>
         <?= Html::a('Tạo khuyến mãi', ['create'], ['class' => 'btn btn-hero btn-md']) ?>

@@ -80,7 +80,17 @@ $("#dashboard-grid-reset").click(function()
 ?>
 <div class="container">
 
-    <h1 class="title"><?= Html::encode($this->title) ?></h1>
+    <section class="content-header">
+      <h1 class="title" style="width: 40%;">
+        <?= Html::encode($this->title) ?>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-futbol-o"></i> Quản lý sân</a></li>
+        <li><?= Html::a('Danh sách', ['pitch/index', 'sort' => '-created_at']) ?></a></li>
+        <li><?= Html::a('Chi tiết sân', ['pitch/view', 'id' => $subPitch->pitch_id]) ?></li>
+        <li class="active">Danh sách đặt sân</li>
+      </ol>
+    </section>
 
     <?php Pjax::begin([
         'options' => [
@@ -124,27 +134,12 @@ $("#dashboard-grid-reset").click(function()
                     'headerOptions' => ['style' => 'width:10%'],
                 ],
                 [   
-                    'label' => 'Xác nhận?',
+                    'label' => 'Thanh toán?',
                     'attribute' => 'is_verified',
                     'format' => 'raw',
                     'value' => function($data) 
                     {
                         return $data->is_verified ? 
-                        '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
-                        '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
-                    },
-                    'filter' => [
-                            0 => 'No',
-                            1 => 'Yes',
-                        ]
-                ],
-                [   
-                    'label' => 'Thanh toán?',
-                    'attribute' => 'is_paid',
-                    'format' => 'raw',
-                    'value' => function($data) 
-                    {
-                        return $data->is_paid ? 
                         '<i class="fa fa-check color-success" aria-hidden="true"></i>' : 
                         '<i class="fa fa-times color-danger" aria-hidden="true"></i>';
                     },
@@ -177,27 +172,39 @@ $("#dashboard-grid-reset").click(function()
                         'format'=>'raw',
                         'value' => function($data) 
                         {   
-                            $label = 'Xem';
-                            $typeBtn = 'btn-primary';
+                            $label = '<span class="glyphicon glyphicon-eye-open"></span>';
+                            $typeBtn = 'btn-hero';
+                            $title = 'Xem';
 
-                            if ($data->is_verified && !$data->is_paid) {
-                                $label = 'Thanh toán';
-                                $typeBtn = 'btn-hero';
-                            }
-                            elseif (!$data->is_verified) {
-                                $label = 'Xác nhận';
-                                $typeBtn = 'btn-info';
-                            }
-                            
+                            if (!$data->is_verified) {
+                                $label = '<i class="fa fa-credit-card"></i>';
+                                $typeBtn = 'btn-primary';
+                                $title = 'Thanh toán';
+                            }             
 
-                            return Html::a($label, 
+                            $btnStr =  Html::a($label, 
                                 [
                                     'view-booking', 
                                     'booking_id' => $data->booking_id
                                 ], 
-                                ['class' => 'btn btn-sm ' . $typeBtn]);
-                        }
-            
+                                ['class' => 'btn btn-sm ' . $typeBtn,
+                                    'title' => $title,
+                                ]);
+
+                            if ($data->is_verified == 0)
+                                $btnStr = $btnStr . ' ' .
+                                Html::a('<i class="fa fa-trash"></i>', ['delete-booking', 'booking_id' => $data->booking_id], [
+                                    'class' => 'btn btn-danger btn-sm',
+                                    'title' => 'Xóa',
+                                    'data' => [
+                                        'confirm' => 'Bạn có chắc xóa đặt sân này?',
+                                        'method' => 'post',
+                                    ],
+                                ]);
+
+                            return $btnStr;
+                        },
+                        'headerOptions' => ['style' => 'width:9%;'],
                 ],
             ],
         ]); ?>

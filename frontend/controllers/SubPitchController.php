@@ -29,6 +29,7 @@ class SubPitchController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'delete-booking' => ['POST'],
                     'verify' => ['POST'],
                     'pay' => ['POST'],
                     'get-events' => ['GET'],
@@ -51,7 +52,7 @@ class SubPitchController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['view-booking', 'verify', 'pay'],
+                        'actions' => ['view-booking', 'verify', 'pay', 'delete-booking'],
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
                             if ($this->isOwnerOfPitch()) {
@@ -111,6 +112,16 @@ class SubPitchController extends Controller
             throw new HttpException(403, 'You\'re not allowed to do this action.');
             
         return $this->redirect(['pitch/view', 'id' => $pitch_id]);
+    }
+
+    public function actionDeleteBooking($booking_id)
+    {
+        $booking = $this->findBookingModel($booking_id);
+        if ($booking->is_verified === 1)
+            throw new HttpException(403, 'Booking was paid. You\'re not allowed to do this action.');
+        $booking->delete();
+
+        return $this->redirect(['list-booking', 'id' => $booking->sub_pitch_id, 'sort' => '-created_at']);
     }
 
     /**
@@ -197,7 +208,7 @@ class SubPitchController extends Controller
         $model = $this->findBookingModel($booking_id);
 
         if ($model->is_verified)
-            throw new HttpException(403, 'This booking was verifed.');
+            throw new HttpException(403, 'This booking was paid.');
 
         $model->is_verified = '1';
         $model->is_validateBookDay = false;
@@ -205,12 +216,12 @@ class SubPitchController extends Controller
         {   
             Yii::info($model->getErrors(), 'Get Errors');
             Yii::$app->session->setFlash('error', 
-                'Đã có lỗi khi xác nhận đặt sân này: ' . 
+                'Đã có lỗi khi thanh toán đặt sân này: ' . 
                 Utils::arrrayToStrError($model->getErrors()) );
         }
         else
             Yii::$app->session->setFlash('success', 
-                'Xác nhận đặt sân thành công.');
+                'Thanh toán đặt sân thành công.');
 
         return $this->redirect(['view-booking', 'booking_id' => $booking_id]); 
     }

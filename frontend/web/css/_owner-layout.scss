@@ -366,6 +366,15 @@ a {
   opacity: .7;
 }
 
+.content-header > h1 {
+  font-size: 36px;
+}
+
+.content-header {
+    position: relative;
+    padding: 15px 15px 15px 0;
+}
+
 @media (min-width: 1400px) {
 
   html, body {
