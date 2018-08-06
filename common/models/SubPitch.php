@@ -134,10 +134,24 @@ class SubPitch extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCampaigns()
-    {
-        return $this->hasMany(Campaign::className(), ['campaign_id' => 'campaign_id'])
-                    ->viaTable('CampaignSubPitch', ['sub_pitch_id' => 'sub_pitch_id']);
+    public function getCampaigns($params = null)
+    {   
+        $query = $this->hasMany(Campaign::className(), ['campaign_id' => 'campaign_id']);
+        if (isset($params)) 
+        {   
+            if (is_array($params))
+            {
+                foreach ($params as $value) {
+                    $query->andFilterWhere($value);
+                }
+            }
+            else 
+                $query->andFilterWhere($params);
+        }
+
+        $query->viaTable('CampaignSubPitch', ['sub_pitch_id' => 'sub_pitch_id']);
+
+        return $query;
     }
 
     public function beforeDelete()

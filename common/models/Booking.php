@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use common\models\SubPitch;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "Booking".
@@ -52,7 +53,7 @@ class Booking extends \yii\db\ActiveRecord
             [['user_id', 'sub_pitch_id', 'book_day', 'start_time'], 'required'],
             [['user_id', 'sub_pitch_id', 'created_at', 'updated_at', 'book_range'], 'integer'],
             [['book_day', 'start_time', 'end_time'], 'safe'],
-            [['message'], 'string'],
+            [['message', 'additional_info'], 'string'],
             [['is_verified', 'is_paid'], 'string', 'max' => 1],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'user_id']],
             [['sub_pitch_id'], 'exist', 'skipOnError' => true, 'targetClass' => SubPitch::className(), 'targetAttribute' => ['sub_pitch_id' => 'sub_pitch_id']],
@@ -146,14 +147,24 @@ class Booking extends \yii\db\ActiveRecord
 
         $original_total_price 
             = Booking::diffByHours($this->end_time, $this->start_time) * $subPitch->price_per_hour;
-        $campaigns = $subPitch->getCampaigns()->all();
+
+        $book_start_time = $this->book_day . ' ' . $this->start_time;
+        $book_end_time = $this->book_day . ' ' . $this->end_time;
+
+        $campaigns = $subPitch->getCampaigns([
+            ['<=', 'start_time', new Expression("CAST('$book_start_time' AS datetime)")],
+            ['>=', 'end_time', new Expression("CAST('$book_end_time' AS datetime)")],
+        ])->all();
+
         $total_price = $original_total_price;
-        Yii::info($total_price, 'Total_price');
+        
         foreach ($campaigns as $campaign) {
             switch ($campaign->type) {
                 case 0:
                     $total_price = $total_price - $original_total_price * $campaign->value / 100;
-                    Yii::info($total_price, 'Total_price');
+                    $total_price = $total_price < 0 ? 0 : $total_price;
+                    $this->additional_info = $this->additional_info  .
+                        'Giảm giá ' . $campaign->value . '% từ ' . $campaign->name . '<br>';
                     break;
                 
                 default:

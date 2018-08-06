@@ -13,6 +13,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\HttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\db\Expression;
 
 /**
  * BookingController implements the CRUD actions for Booking model.
@@ -124,7 +125,21 @@ class BookingController extends Controller
             $campaigns_array = [];
 
             foreach ($subPitches as $subPitch) {
-                $campaigns_array[] = $subPitch->getCampaigns()->all();
+                $now = new \DateTime('NOW');
+                $now_str = $now->format('Y-m-d H:i:s');
+
+                $comming = $now->modify('+15 day');
+                $comming_str = $comming->format('Y-m-d H:i:s');
+
+                $now = new \DateTime('NOW');
+                $past = $now->modify('-15 day');
+                $past_str = $past->format('Y-m-d H:i:s');
+                
+                $campaigns_array[] = $subPitch->getCampaigns([
+                    ['>=', 'start_time', new Expression("CAST('$past_str' AS datetime)")],
+                    ['<=', 'end_time', new Expression("CAST('$comming_str' AS datetime)")],
+                    ['>=', 'end_time', new Expression("CAST('$now_str' AS datetime)")],
+                ])->all();
             }
 
             return $this->render('view-pitch-multiple.twig', [
@@ -134,8 +149,21 @@ class BookingController extends Controller
             ]);
         }
             
+        $now = new \DateTime('NOW');
+        $now_str = $now->format('Y-m-d H:i:s');
 
-        $campaigns = $subPitches[0]->getCampaigns()->all();
+        $comming = $now->modify('+15 day');
+        $comming_str = $comming->format('Y-m-d H:i:s');
+
+        $now = new \DateTime('NOW');
+        $past = $now->modify('-15 day');
+        $past_str = $past->format('Y-m-d H:i:s');
+
+        $campaigns = $subPitches[0]->getCampaigns([
+            ['>=', 'start_time', new Expression("CAST('$past_str' AS datetime)")],
+            ['<=', 'end_time', new Expression("CAST('$comming_str' AS datetime)")],
+            ['>=', 'end_time', new Expression("CAST('$now_str' AS datetime)")],
+        ])->all();
 
         return $this->render('view-pitch.twig', [
             'pitch' => $pitch,
@@ -157,8 +185,17 @@ class BookingController extends Controller
         $subPitch = $this->findSubPitchModel($model->sub_pitch_id);
         $pitch = $subPitch->getPitch()->one();
 
+        $render_str_infos = '';
+        $additional_infos = explode('<br>', $model->additional_info);
+
+        foreach ($additional_infos as $value) {
+            if (trim($value) !== '')
+                $render_str_infos = $render_str_infos . '<p>' . $value . '</p>';
+        }
+
         return $this->render('view.twig', [
             'model' => $model,
+            'render_str_infos' => $render_str_infos,
             'user' => $user,
             'pitch' => $pitch,
             'subPitch' => $subPitch,

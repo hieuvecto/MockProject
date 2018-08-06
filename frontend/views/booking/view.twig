@@ -62,6 +62,11 @@
                         'value': model.total_price|number_format(0, '.', ',') ~ ' ' ~ subPitch.currency
                     },
                     {
+                        'label': 'Thông tin thêm',
+                        'format': 'raw',
+                        'value': render_str_infos,
+                    },
+                    {
                         'label': 'Tạo lúc',
                         'attribute': 'created_at',
                         'format': ['datetime', 'php:Y-m-d h:i:s'], 
